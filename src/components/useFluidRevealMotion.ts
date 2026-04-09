@@ -1,97 +1,96 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { PointerEvent, RefObject } from 'react'
-import { animate, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { animate, useMotionValue } from 'framer-motion'
+import { createNoise2D } from 'simplex-noise'
 
 type FluidRevealMotionParams = {
   containerRef: RefObject<HTMLElement | null>
 }
 
 const INTERACTIVE_QUERY = '(hover: hover) and (pointer: fine)'
-const BLOB_COUNT = 8
 
 export function useFluidRevealMotion({ containerRef }: FluidRevealMotionParams) {
   const [interactive, setInteractive] = useState(false)
   const [isHovering, setIsHovering] = useState(false)
 
-  // Main cursor position (MotionValues for spring physics)
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
-
-  // Base radius (MotionValue for expansion animation)
   const radius = useMotionValue(0)
 
-  // Trails for blobs
-  const blobs = useMemo(() => {
-    return Array.from({ length: BLOB_COUNT }).map((_, i) => {
-      // Each blob has a slightly different spring for fluid lag
-      const stiffness = 80 - i * 8
-      const damping = 15 + i * 2
-      const mass = 1 + i * 0.2
-
-      // We use a transformed motion value for the trailing radius
-      // to make each successive blob smaller.
-      const springRadius = useSpring(radius, { stiffness, damping, mass })
-      const scaledRadius = useTransform(springRadius, (r) => r * (1 - i * 0.08))
-
-      return {
-        x: useSpring(mouseX, { stiffness, damping, mass }),
-        y: useSpring(mouseY, { stiffness, damping, mass }),
-        r: scaledRadius,
-      }
-    })
-  }, [mouseX, mouseY, radius])
+  const idleNoise = useMemo(() => createNoise2D(), [])
+  const rafRef = useRef<number | null>(null)
+  const timeRef = useRef(0)
 
   useEffect(() => {
     const mq = window.matchMedia(INTERACTIVE_QUERY)
     const update = () => {
       setInteractive(mq.matches)
-      if (!mq.matches) setIsHovering(false)
     }
     update()
     mq.addEventListener('change', update)
     return () => mq.removeEventListener('change', update)
   }, [])
 
+  // Idle "wandering" animation when not hovering
+  useEffect(() => {
+    const loop = (t: number) => {
+      timeRef.current = t / 1500
+      
+      if (!isHovering && containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect()
+        const cx = rect.width / 2
+        const cy = rect.height / 2
+        
+        // Wander around the center
+        const nx = idleNoise(timeRef.current * 0.4, 0) * (rect.width * 0.25)
+        const ny = idleNoise(0, timeRef.current * 0.4) * (rect.height * 0.25)
+        
+        mouseX.set(cx + nx)
+        mouseY.set(cy + ny)
+        
+        // Smaller base radius for idle state
+        if (radius.get() === 0 || radius.get() < 30) {
+          animate(radius, 45, { duration: 1.5, ease: 'easeInOut' })
+        }
+      }
+      
+      rafRef.current = requestAnimationFrame(loop)
+    }
+
+    rafRef.current = requestAnimationFrame(loop)
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
+    }
+  }, [isHovering, containerRef, mouseX, mouseY, radius, idleNoise])
+
   const onPointerEnter = useCallback(
     (event: PointerEvent<HTMLElement>) => {
-      if (!interactive) return
       setIsHovering(true)
-
       const containerEl = containerRef.current
       if (!containerEl) return
 
       const rect = containerEl.getBoundingClientRect()
-      const x = event.clientX - rect.left
-      const y = event.clientY - rect.top
-
-      // Snap mouse values to initial enter position
-      mouseX.set(x)
-      mouseY.set(y)
-
-      // Animate expansion
-      const targetRadius = Math.max(120, rect.width * 0.35)
+      const targetRadius = Math.max(75, rect.width * 0.22)
       animate(radius, targetRadius, {
         type: 'spring',
-        stiffness: 120,
+        stiffness: 140,
         damping: 25,
       })
     },
-    [interactive, containerRef, mouseX, mouseY, radius],
+    [containerRef, radius],
   )
 
   const onPointerLeave = useCallback(() => {
-    if (!interactive) return
     setIsHovering(false)
-    // Animate retraction
-    animate(radius, 0, {
-      duration: 0.4,
-      ease: 'circIn',
+    // Don't go to 0, go to idle radius
+    animate(radius, 45, {
+      duration: 0.8,
+      ease: 'easeInOut',
     })
-  }, [interactive, radius])
+  }, [radius])
 
   const onPointerMove = useCallback(
     (event: PointerEvent<HTMLElement>) => {
-      if (!interactive) return
       const containerEl = containerRef.current
       if (!containerEl) return
 
@@ -99,11 +98,45 @@ export function useFluidRevealMotion({ containerRef }: FluidRevealMotionParams) 
       mouseX.set(event.clientX - rect.left)
       mouseY.set(event.clientY - rect.top)
     },
-    [containerRef, interactive, mouseX, mouseY],
+    [containerRef, mouseX, mouseY],
   )
 
+  // Ripple effect on tap/click
+  const triggerRipple = useCallback(() => {
+    const currentRadius = radius.get()
+    const containerEl = containerRef.current
+    if (!containerEl) return
+    
+    const rect = containerEl.getBoundingClientRect()
+    const peakRadius = Math.max(currentRadius + 60, rect.width * 0.4)
+    
+    animate(radius, peakRadius, {
+      type: 'spring',
+      stiffness: 300,
+      damping: 15,
+      onComplete: () => {
+        const resetRadius = isHovering ? Math.max(75, rect.width * 0.22) : 45
+        animate(radius, resetRadius, {
+          type: 'spring',
+          stiffness: 100,
+          damping: 20
+        })
+      }
+    })
+  }, [radius, isHovering, containerRef])
+
   return useMemo(
-    () => ({ interactive, isHovering, onPointerEnter, onPointerLeave, onPointerMove, blobs }),
-    [interactive, isHovering, onPointerEnter, onPointerLeave, onPointerMove, blobs],
+    () => ({
+      interactive,
+      isHovering,
+      onPointerEnter,
+      onPointerLeave,
+      onPointerMove,
+      triggerRipple,
+      mouseX,
+      mouseY,
+      radius,
+    }),
+    [interactive, isHovering, onPointerEnter, onPointerLeave, onPointerMove, triggerRipple, mouseX, mouseY, radius],
   )
 }

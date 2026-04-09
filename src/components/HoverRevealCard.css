@@ -30,10 +30,7 @@
   transition: filter 0.4s ease;
 }
 
-/* dim front slightly while hovering for contrast */
-.hover-reveal-card:hover .hrc-front {
-  filter: brightness(0.6) saturate(0.5);
-}
+/* Dimming removed as per request */
 
 .hrc-back {
   z-index: 3;
@@ -54,11 +51,7 @@
   will-change: mask-image;
   backface-visibility: hidden;
   transition: opacity 0.3s ease;
-  opacity: 0;
-}
-
-.hrc-reveal.is-hovering {
-  opacity: 1;
+  opacity: 1; /* Always visible */
 }
 
 /* ── Hidden SVG Mask Definitions ───────────────────────────────── */
