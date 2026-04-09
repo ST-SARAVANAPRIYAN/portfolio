@@ -1,5 +1,6 @@
-import { useRef } from 'react'
-import { useHoverRevealMotion } from './useHoverRevealMotion'
+import { useId, useRef } from 'react'
+import { motion } from 'framer-motion'
+import { useFluidRevealMotion } from './useFluidRevealMotion'
 import './HoverRevealCard.css'
 
 type HoverRevealCardProps = {
@@ -11,10 +12,10 @@ type HoverRevealCardProps = {
 
 export function HoverRevealCard({ title, frontImage, backImage, className }: HoverRevealCardProps) {
   const containerRef = useRef<HTMLDivElement | null>(null)
-  const revealRef = useRef<HTMLDivElement | null>(null)
+  const maskId = useId().replace(/:/g, '') // SVG IDs don't like colons
 
-  const { interactive, isHovering, onPointerEnter, onPointerLeave, onPointerMove } =
-    useHoverRevealMotion({ containerRef, revealRef })
+  const { interactive, isHovering, onPointerEnter, onPointerLeave, onPointerMove, blobs } =
+    useFluidRevealMotion({ containerRef })
 
   return (
     <div
@@ -35,19 +36,51 @@ export function HoverRevealCard({ title, frontImage, backImage, className }: Hov
 
       {/* Back image — revealed via fluid splash on hover */}
       {interactive && (
-        <div
-          ref={revealRef}
-          className={`hrc-reveal ${isHovering ? 'is-hovering' : ''}`}
-        >
-          <img
-            src={backImage}
-            alt=""
-            className="hrc-image hrc-back"
-            draggable={false}
-          />
-          {/* Shimmer edge at the reveal boundary */}
-          <div className="hrc-edge-shimmer" aria-hidden="true" />
-        </div>
+        <>
+          <svg className="hrc-svg-mask-definitions" aria-hidden="true">
+            <defs>
+              <filter id="goo">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur" />
+                <feColorMatrix
+                  in="blur"
+                  mode="matrix"
+                  values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 24 -10"
+                  result="goo"
+                />
+                <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+              </filter>
+
+              <mask id={`mask-${maskId}`}>
+                <g filter="url(#goo)">
+                  {blobs.map((blob, i) => (
+                    <motion.circle
+                      key={i}
+                      cx={blob.x}
+                      cy={blob.y}
+                      r={blob.r}
+                      fill="white"
+                    />
+                  ))}
+                </g>
+              </mask>
+            </defs>
+          </svg>
+
+          <div
+            className={`hrc-reveal ${isHovering ? 'is-hovering' : ''}`}
+            style={{
+              WebkitMaskImage: `url(#mask-${maskId})`,
+              maskImage: `url(#mask-${maskId})`,
+            }}
+          >
+            <img
+              src={backImage}
+              alt=""
+              className="hrc-image hrc-back"
+              draggable={false}
+            />
+          </div>
+        </>
       )}
 
       {/* Hover hint tooltip */}
