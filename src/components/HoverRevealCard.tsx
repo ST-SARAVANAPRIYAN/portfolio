@@ -29,9 +29,9 @@ function FluidBlob({ i, mouseX, mouseY, radius, offsetX, offsetY, total, noise2D
   const time = useTime()
 
   // Loose physics with variations
-  const stiffness = 140 - i * 3
-  const damping = 12 + i * 1.8
-  const mass = 0.7 + i * 0.12
+  const stiffness = 82 - i * 1.1
+  const damping = 10 + i * 0.65
+  const mass = 0.9 + i * 0.08
 
   const springX = useSpring(mouseX, { stiffness, damping, mass })
   const springY = useSpring(mouseY, { stiffness, damping, mass })
@@ -51,7 +51,7 @@ function FluidBlob({ i, mouseX, mouseY, radius, offsetX, offsetY, total, noise2D
   })
 
   const scaledRadius = useTransform(springRadius, (r) => {
-    const scale = (1 - (i / total) * 0.95) * 0.55
+    const scale = (1 - (i / total) * 0.84) * 0.82
     return r * scale
   })
 
@@ -65,7 +65,7 @@ function FluidBlob({ i, mouseX, mouseY, radius, offsetX, offsetY, total, noise2D
   )
 }
 
-const BLOB_COUNT = 48
+const BLOB_COUNT = 34
 
 export function HoverRevealCard({ title, frontImage, backImage, className }: HoverRevealCardProps) {
   const containerRef = useRef<HTMLDivElement | null>(null)
@@ -73,7 +73,6 @@ export function HoverRevealCard({ title, frontImage, backImage, className }: Hov
   const noise2D = useMemo(() => createNoise2D(), [])
 
   const {
-    isHovering,
     onPointerEnter,
     onPointerLeave,
     onPointerMove,
@@ -85,10 +84,10 @@ export function HoverRevealCard({ title, frontImage, backImage, className }: Hov
 
   const blobData = useMemo(() => {
     return Array.from({ length: BLOB_COUNT }).map((_, i) => ({
-      x: (Math.random() - 0.5) * (30 + i * 3.5),
-      y: (Math.random() - 0.5) * (30 + i * 3.5),
-      noiseScale: 15 + Math.random() * 25,
-      noiseSpeed: 0.6 + Math.random() * 1.2,
+      x: (Math.random() - 0.5) * (56 + i * 4.4),
+      y: (Math.random() - 0.5) * (44 + i * 3.8),
+      noiseScale: 22 + Math.random() * 34,
+      noiseSpeed: 0.4 + Math.random() * 1.1,
     }))
   }, [])
 
@@ -114,11 +113,11 @@ export function HoverRevealCard({ title, frontImage, backImage, className }: Hov
       <svg className="hrc-svg-mask-definitions" aria-hidden="true">
         <defs>
           <filter id="goo">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="18" result="blur" />
+            <feGaussianBlur in="SourceGraphic" stdDeviation="22" result="blur" />
             <feColorMatrix
               in="blur"
               mode="matrix"
-              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 45 -15"
+              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 36 -10"
               result="goo"
             />
             <feComposite in="SourceGraphic" in2="goo" operator="atop" />
@@ -151,7 +150,7 @@ export function HoverRevealCard({ title, frontImage, backImage, className }: Hov
         style={{
           WebkitMaskImage: `url(#mask-${maskId})`,
           maskImage: `url(#mask-${maskId})`,
-          opacity: 1 // Always visible now
+          opacity: 1
         }}
       >
         <img
@@ -160,11 +159,6 @@ export function HoverRevealCard({ title, frontImage, backImage, className }: Hov
           className="hrc-image hrc-back"
           draggable={false}
         />
-      </div>
-
-      {/* Hover hint */}
-      <div className={`hrc-hint ${isHovering ? 'hidden' : ''}`} aria-hidden="true">
-        <span>{isHovering ? 'Tap to ripple' : 'hover to reveal'}</span>
       </div>
     </div>
   )

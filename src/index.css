@@ -1,9 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Serif+JP:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap');
 
 :root {
-  --bg-1: #07090c;
-  --bg-2: #0b0f12;
-  --bg-3: #0d1512;
+  --bg-1: #0a0a0a;
+  --bg-2: #120a08;
+  --bg-3: #0a0a0a;
+  --dark-accent-1: #ec5b2b;
+  --dark-accent-2: #ee7948;
   --font-base: 'Manrope', sans-serif;
   --font-display: 'Sora', sans-serif;
 }
@@ -40,12 +42,12 @@ html.lenis body {
 
 body {
   font-family: var(--font-base);
-  color: #c8dfd4;
+  color: #f4dfd7;
   line-height: 1.55;
   background:
-    radial-gradient(ellipse at 15% 5%, rgba(12, 245, 168, 0.09), transparent 38%),
-    radial-gradient(ellipse at 88% 12%, rgba(63, 255, 212, 0.06), transparent 32%),
-    radial-gradient(ellipse at 50% 80%, rgba(12, 245, 168, 0.04), transparent 40%),
+    radial-gradient(ellipse at 15% 6%, rgba(236, 91, 43, 0.18), transparent 36%),
+    radial-gradient(ellipse at 86% 13%, rgba(238, 121, 72, 0.12), transparent 32%),
+    radial-gradient(ellipse at 50% 80%, rgba(236, 91, 43, 0.07), transparent 42%),
     linear-gradient(175deg, var(--bg-1) 0%, var(--bg-2) 50%, var(--bg-3) 100%);
   background-attachment: fixed;
   overflow-x: hidden;
@@ -72,8 +74,8 @@ body[data-theme='sakura'] {
 
 /* Global selection */
 ::selection {
-  background: rgba(12, 245, 168, 0.28);
-  color: #e8fff2;
+  background: rgba(236, 91, 43, 0.32);
+  color: #fff2eb;
 }
 
 body[data-theme='sakura'] ::selection {
@@ -83,7 +85,7 @@ body[data-theme='sakura'] ::selection {
 
 /* Focus rings */
 :focus-visible {
-  outline: 2px solid rgba(12, 245, 168, 0.7);
+  outline: 2px solid rgba(236, 91, 43, 0.78);
   outline-offset: 3px;
   border-radius: 4px;
 }
@@ -102,10 +104,10 @@ body[data-theme='sakura'] :focus-visible {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(12, 245, 168, 0.25);
+  background: rgba(236, 91, 43, 0.34);
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(12, 245, 168, 0.45);
+  background: rgba(238, 121, 72, 0.56);
 }

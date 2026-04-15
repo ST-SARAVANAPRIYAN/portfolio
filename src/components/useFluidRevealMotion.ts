@@ -20,6 +20,7 @@ export function useFluidRevealMotion({ containerRef }: FluidRevealMotionParams) 
   const idleNoise = useMemo(() => createNoise2D(), [])
   const rafRef = useRef<number | null>(null)
   const timeRef = useRef(0)
+  const didSetIdleRadius = useRef(false)
 
   useEffect(() => {
     const mq = window.matchMedia(INTERACTIVE_QUERY)
@@ -31,8 +32,16 @@ export function useFluidRevealMotion({ containerRef }: FluidRevealMotionParams) 
     return () => mq.removeEventListener('change', update)
   }, [])
 
-  // Idle "wandering" animation when not hovering
+  // Idle wandering only on devices with precise pointers.
   useEffect(() => {
+    if (!interactive) {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current)
+        rafRef.current = null
+      }
+      return
+    }
+
     const loop = (t: number) => {
       timeRef.current = t / 1500
       
@@ -48,9 +57,9 @@ export function useFluidRevealMotion({ containerRef }: FluidRevealMotionParams) 
         mouseX.set(cx + nx)
         mouseY.set(cy + ny)
         
-        // Smaller base radius for idle state
-        if (radius.get() === 0 || radius.get() < 30) {
-          animate(radius, 45, { duration: 1.5, ease: 'easeInOut' })
+        if (!didSetIdleRadius.current) {
+          radius.set(64)
+          didSetIdleRadius.current = true
         }
       }
       
@@ -61,36 +70,43 @@ export function useFluidRevealMotion({ containerRef }: FluidRevealMotionParams) 
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current)
     }
-  }, [isHovering, containerRef, mouseX, mouseY, radius, idleNoise])
+  }, [interactive, isHovering, containerRef, mouseX, mouseY, radius, idleNoise])
 
   const onPointerEnter = useCallback(
-    (event: PointerEvent<HTMLElement>) => {
+    () => {
+      if (!interactive) return
       setIsHovering(true)
+      didSetIdleRadius.current = false
       const containerEl = containerRef.current
       if (!containerEl) return
 
       const rect = containerEl.getBoundingClientRect()
-      const targetRadius = Math.max(75, rect.width * 0.22)
+      const targetRadius = Math.max(110, rect.width * 0.26)
       animate(radius, targetRadius, {
         type: 'spring',
-        stiffness: 140,
-        damping: 25,
+        stiffness: 88,
+        damping: 21,
+        mass: 1,
       })
     },
-    [containerRef, radius],
+    [containerRef, interactive, radius],
   )
 
   const onPointerLeave = useCallback(() => {
+    if (!interactive) return
     setIsHovering(false)
-    // Don't go to 0, go to idle radius
-    animate(radius, 45, {
-      duration: 0.8,
-      ease: 'easeInOut',
+    didSetIdleRadius.current = false
+    animate(radius, 64, {
+      type: 'spring',
+      stiffness: 72,
+      damping: 20,
+      mass: 1,
     })
-  }, [radius])
+  }, [interactive, radius])
 
   const onPointerMove = useCallback(
     (event: PointerEvent<HTMLElement>) => {
+      if (!interactive) return
       const containerEl = containerRef.current
       if (!containerEl) return
 
@@ -98,32 +114,35 @@ export function useFluidRevealMotion({ containerRef }: FluidRevealMotionParams) 
       mouseX.set(event.clientX - rect.left)
       mouseY.set(event.clientY - rect.top)
     },
-    [containerRef, mouseX, mouseY],
+    [containerRef, interactive, mouseX, mouseY],
   )
 
   // Ripple effect on tap/click
   const triggerRipple = useCallback(() => {
+    if (!interactive) return
     const currentRadius = radius.get()
     const containerEl = containerRef.current
     if (!containerEl) return
     
     const rect = containerEl.getBoundingClientRect()
-    const peakRadius = Math.max(currentRadius + 60, rect.width * 0.4)
+    const peakRadius = Math.max(currentRadius + 84, rect.width * 0.44)
     
     animate(radius, peakRadius, {
       type: 'spring',
-      stiffness: 300,
-      damping: 15,
+      stiffness: 120,
+      damping: 14,
+      mass: 0.9,
       onComplete: () => {
-        const resetRadius = isHovering ? Math.max(75, rect.width * 0.22) : 45
+        const resetRadius = isHovering ? Math.max(110, rect.width * 0.26) : 64
         animate(radius, resetRadius, {
           type: 'spring',
-          stiffness: 100,
-          damping: 20
+          stiffness: 78,
+          damping: 21,
+          mass: 1,
         })
       }
     })
-  }, [radius, isHovering, containerRef])
+  }, [interactive, radius, isHovering, containerRef])
 
   return useMemo(
     () => ({

@@ -35,13 +35,6 @@ gsap.registerPlugin(ScrollTrigger)
 
 type Theme = 'dark' | 'sakura'
 
-type ThemeTransitionState = {
-  x: number
-  y: number
-  key: number
-  to: Theme
-}
-
 type LeafSpec = {
   left: number
   duration: number
@@ -157,7 +150,6 @@ const certifications = [
 
 function App() {
   const [theme, setTheme] = useState<Theme>('dark')
-  const [themeTransition, setThemeTransition] = useState<ThemeTransitionState | null>(null)
   const [mobileOpen, setMobileOpen] = useState(false)
   const rootRef = useRef<HTMLDivElement | null>(null)
   const reduceMotion = useReducedMotion()
@@ -166,9 +158,9 @@ function App() {
   const isSakura = theme === 'sakura'
 
   const handleThemeSwitch = (next: Theme, e: ReactMouseEvent<HTMLButtonElement>) => {
-    if (next === theme || themeTransition) return
-    const rect = e.currentTarget.getBoundingClientRect()
-    setThemeTransition({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2, key: Date.now(), to: next })
+    if (next === theme) return
+    void e
+    setTheme(next)
   }
 
   useEffect(() => {
@@ -184,7 +176,7 @@ function App() {
   }, [mobileOpen])
 
   useEffect(() => {
-    if (reduceMotion) return
+    if (reduceMotion || !rootRef.current) return
 
     const lenis = new Lenis({
       duration: 1.1,
@@ -212,10 +204,14 @@ function App() {
           {
             autoAlpha: 1,
             y: 0,
-            duration: 0.85,
-            ease: 'power3.out',
-            scrollTrigger: { trigger: el, start: 'top 84%', once: true },
-          },
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: el,
+              start: 'top 86%',
+              once: true,
+            },
+          }
         )
       })
     }, rootRef)
@@ -224,485 +220,305 @@ function App() {
       ctx.revert()
       gsap.ticker.remove(tick)
       lenis.destroy()
-      ScrollTrigger.getAll().forEach((t) => t.kill())
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
     }
   }, [reduceMotion])
 
   return (
-    <div className={`portfolio-root theme-${theme}`} ref={rootRef}>
-
-
-      {/* Scroll Progress */}
+    <div ref={rootRef} className={`portfolio-root ${isSakura ? 'theme-sakura' : ''}`}>
       <motion.div className="scroll-progress" style={{ scaleX: progressScale }} />
 
-      {/* Ambient Orbs */}
       <div className="ambient ambient-a" aria-hidden="true" />
       <div className="ambient ambient-b" aria-hidden="true" />
       <div className="ambient ambient-c" aria-hidden="true" />
 
-      {/* Theme Transition */}
-      {themeTransition && (
-        <motion.div
-          key={themeTransition.key}
-          className={`theme-transition-overlay theme-overlay-${themeTransition.to}`}
-          style={{ '--ripple-x': `${themeTransition.x}px`, '--ripple-y': `${themeTransition.y}px` } as CSSProperties}
-          initial={{ clipPath: `circle(0px at ${themeTransition.x}px ${themeTransition.y}px)` }}
-          animate={{ clipPath: `circle(160vmax at ${themeTransition.x}px ${themeTransition.y}px)` }}
-          transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
-          onAnimationComplete={() => {
-            setTheme(themeTransition.to)
-            setThemeTransition(null)
-          }}
-          aria-hidden="true"
-        />
-      )}
-
-      {/* Sakura leaves */}
       <div className={`sakura-leaf-layer ${isSakura ? 'active' : ''}`} aria-hidden="true">
-        {sakuraLeaves.map((leaf, i) => (
-          <span
-            key={`${leaf.left}-${i}`}
-            className="sakura-leaf"
-            style={{
-              '--leaf-left': `${leaf.left}%`,
-              '--leaf-duration': `${leaf.duration}s`,
-              '--leaf-delay': `${leaf.delay}s`,
-              '--leaf-drift': `${leaf.drift}px`,
-              '--leaf-size': `${leaf.size}px`,
-            } as CSSProperties}
-          />
-        ))}
+        {sakuraLeaves.map((leaf, index) => {
+          const style: CSSProperties = {
+            ['--leaf-left' as string]: `${leaf.left}%`,
+            ['--leaf-duration' as string]: `${leaf.duration}s`,
+            ['--leaf-delay' as string]: `${leaf.delay}s`,
+            ['--leaf-drift' as string]: `${leaf.drift}px`,
+            ['--leaf-size' as string]: `${leaf.size}px`,
+          }
+
+          return <span key={index} className="sakura-leaf" style={style} />
+        })}
       </div>
 
-      {/* ── NAV ──────────────────────────────────────────────────── */}
       <header className="topbar">
-        <a className="brand" href="#home" onClick={() => setMobileOpen(false)}>
-          <span className="brand-name">SARAVANA PRIYAN</span>
-          <span className="brand-sub">AI · Data Science</span>
+        <a href="#home" className="brand" onClick={() => setMobileOpen(false)}>
+          <span className="brand-name">Saravana Priyan</span>
+          <span className="brand-sub">Portfolio</span>
         </a>
 
-        <nav className="desktop-nav" aria-label="Site navigation">
-          {navLinks.map((link) => (
-            <a key={link.href} href={link.href} className="nav-link">
-              {isSakura ? link.jp : link.label}
+        <nav className="desktop-nav" aria-label="Main navigation">
+          {navLinks.map((item) => (
+            <a key={item.href} href={item.href} className="nav-link">
+              {item.label}
             </a>
           ))}
         </nav>
 
         <div className="topbar-right">
-          <div className="theme-switch" role="group" aria-label="Theme selector">
+          <div className="theme-switch" role="group" aria-label="Theme switcher">
             <button
               type="button"
-              id="btn-theme-dark"
-              className={theme === 'dark' ? 'active' : ''}
-              onClick={(e) => handleThemeSwitch('dark', e)}
-              disabled={Boolean(themeTransition)}
+              className={!isSakura ? 'active' : ''}
+              onClick={(event) => handleThemeSwitch('dark', event)}
             >
-              <MoonStar size={14} aria-hidden="true" /> Dark
+              <MoonStar size={14} />
+              Dark
             </button>
             <button
               type="button"
-              id="btn-theme-sakura"
-              className={theme === 'sakura' ? 'active' : ''}
-              onClick={(e) => handleThemeSwitch('sakura', e)}
-              disabled={Boolean(themeTransition)}
+              className={isSakura ? 'active' : ''}
+              onClick={(event) => handleThemeSwitch('sakura', event)}
             >
-              <SunMedium size={14} aria-hidden="true" /> Sakura
+              <SunMedium size={14} />
+              Sakura
             </button>
           </div>
 
           <button
-            id="mobile-menu-toggle"
-            className="burger"
             type="button"
-            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={mobileOpen}
-            onClick={() => setMobileOpen((o) => !o)}
+            className="burger"
+            aria-label="Toggle mobile menu"
+            onClick={() => setMobileOpen((open) => !open)}
           >
-            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+            {mobileOpen ? <X size={16} /> : <Menu size={16} />}
           </button>
         </div>
       </header>
 
-      {/* Mobile Nav Overlay */}
-      <div className={`mobile-nav ${mobileOpen ? 'open' : ''}`} aria-hidden={!mobileOpen}>
-        {navLinks.map((link) => (
+      <nav className={`mobile-nav ${mobileOpen ? 'open' : ''}`} aria-label="Mobile navigation">
+        {navLinks.map((item) => (
           <a
-            key={link.href}
-            href={link.href}
+            key={item.href}
+            href={item.href}
             className="mobile-nav-link"
             onClick={() => setMobileOpen(false)}
-            tabIndex={mobileOpen ? 0 : -1}
           >
-            {isSakura ? link.jp : link.label}
+            {item.label}
           </a>
         ))}
-      </div>
+      </nav>
 
       <main>
-        {/* ── HERO ──────────────────────────────────────────────── */}
-        <section className="hero" id="home">
+        <section id="home" className="hero">
           <motion.div
             className="hero-text"
             variants={heroContainer}
-            initial={reduceMotion ? false : 'hidden'}
+            initial="hidden"
             animate="visible"
           >
-            <motion.p className="eyebrow" variants={heroItem}>
-              {isSakura ? '人工知能・データサイエンス' : 'AI · Data Science · Developer'}
-            </motion.p>
-
-            <motion.h1 variants={heroItem}>
-              {isSakura ? (
-                <>サラバナ<br />プリヤン</>
-              ) : (
-                <>SARAVANA<br />PRIYAN S T</>
-              )}
-            </motion.h1>
-
+            <motion.p className="eyebrow" variants={heroItem}>Software Developer</motion.p>
+            <motion.h1 variants={heroItem}>Saravana Priyan</motion.h1>
             <motion.p className="lead" variants={heroItem}>
-              {isSakura
-                ? 'AIを活用した実践的な開発に強い関心を持ち、設計から実装まで取り組むB.Tech学生です。'
-                : 'Passionate B.Tech student in AI & Data Science — building practical, data-driven software from end to end.'}
+              Building reliable web products with clear UX, practical engineering, and clean visual systems.
             </motion.p>
 
             <motion.div className="hero-actions" variants={heroItem}>
-              <a href="#projects" className="btn-primary" id="hero-cta-projects">
-                {isSakura ? 'プロジェクトを見る' : 'View Projects'}
-                <ArrowUpRight size={16} aria-hidden="true" />
+              <a href="#contact" className="btn-primary">
+                Let&apos;s Work
+                <ArrowUpRight size={14} />
               </a>
-              <a href="#contact" className="btn-secondary" id="hero-cta-contact">
-                {isSakura ? '連絡する' : 'Let\'s Connect'}
-              </a>
+              <a href="#projects" className="btn-secondary">View Projects</a>
             </motion.div>
 
             <motion.div className="hero-stats" variants={heroItem}>
               <div className="stat-pill">
-                <span className="stat-num">8.24</span>
-                <span className="stat-label">CGPA</span>
-              </div>
-              <div className="stat-pill">
                 <span className="stat-num">3+</span>
-                <span className="stat-label">{isSakura ? 'プロジェクト' : 'Projects'}</span>
+                <span className="stat-label">Projects</span>
               </div>
               <div className="stat-pill">
-                <span className="stat-num">4+</span>
-                <span className="stat-label">{isSakura ? '資格' : 'Certifications'}</span>
+                <span className="stat-num">5+</span>
+                <span className="stat-label">Tools</span>
               </div>
               <div className="stat-pill">
-                <span className="stat-num">JLPT</span>
-                <span className="stat-label">N4</span>
+                <span className="stat-num">4</span>
+                <span className="stat-label">Certs</span>
               </div>
             </motion.div>
           </motion.div>
 
-          <motion.div
-            className="hero-card-wrap"
-            initial={reduceMotion ? false : { opacity: 0, scale: 0.94 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          >
+          <motion.div className="hero-card-wrap gsap-reveal" variants={cardVariants} initial="hidden" animate="visible">
+            <div className="card-glow" aria-hidden="true" />
             <HoverRevealCard
-              title={isSakura ? '代表プロジェクト ハイライト' : 'Hover to see the graffiti side'}
+              className="main-hero-card"
+              title="Profile"
               frontImage={frontImage}
               backImage={backImage}
-              className="main-hero-card"
             />
-            <div className="card-glow" aria-hidden="true" />
           </motion.div>
         </section>
 
-        {/* ── ABOUT ──────────────────────────────────────────────── */}
-        <section className="about gsap-reveal" id="about">
+        <section id="about" className="gsap-reveal">
           <div className="section-header">
-            <span className="section-label">
-              <Sparkles size={14} aria-hidden="true" />
-              {isSakura ? 'プロフィール' : 'About'}
-            </span>
-            <h2>{isSakura ? 'プロフィール概要' : 'Who I Am'}</h2>
+            <p className="section-label"><BookOpen size={14} /> About</p>
+            <h2>Focused, practical, and product-minded</h2>
           </div>
 
           <div className="about-grid">
-            <div className="glass-card about-summary">
+            <article className="glass-card about-summary">
               <p>
-                {isSakura
-                  ? 'AIを活用した実践的な開発に強い関心を持ち、設計から実装まで一貫して取り組みます。教育分野や分析領域で、使いやすく信頼性の高いソフトウェアを構築することを目標にしています。'
-                  : 'I focus on building practical AI-driven software with clean architecture, clear data thinking, and user-centered execution. My goal is to contribute to impactful products in education and analytics. I\'m a B.Tech AI & DS student driven by curiosity and a love for continuous learning.'}
+                I design and build web experiences that prioritize speed, usability, and maintainable code.
+                My approach is simple: solve real user needs, keep interfaces intentional, and ship with care.
               </p>
               <div className="about-tags">
-                {['AI/ML', 'Data Science', 'Full Stack', 'JLPT N4'].map((tag) => (
-                  <span key={tag} className="tag">{tag}</span>
-                ))}
+                <span className="tag">Product Thinking</span>
+                <span className="tag">Performance</span>
+                <span className="tag">Clean UI</span>
+                <span className="tag">Frontend Engineering</span>
               </div>
-            </div>
+            </article>
 
-            <div className="glass-card about-info">
-              <h3>{isSakura ? '基本情報' : 'Profile'}</h3>
+            <aside className="glass-card about-info">
+              <h3>Quick Info</h3>
               <ul className="info-list">
-                <li>
-                  <MapPin size={16} aria-hidden="true" />
-                  <span>Karur, Tamil Nadu, India</span>
-                </li>
-                <li>
-                  <Phone size={16} aria-hidden="true" />
-                  <a href="tel:+919994054077">+91 99940 54077</a>
-                </li>
-                <li>
-                  <Mail size={16} aria-hidden="true" />
-                  <a href="mailto:saravanapriyanst@gmail.com">saravanapriyanst@gmail.com</a>
-                </li>
-                <li>
-                  <Users size={16} aria-hidden="true" />
-                  <span>{isSakura ? 'B.Tech AI&DS — 2027卒' : 'B.Tech AI & DS, Graduating 2027'}</span>
-                </li>
+                <li><MapPin size={16} />Tamil Nadu, India</li>
+                <li><Mail size={16} /><a href="mailto:saravanapriyan2004@gmail.com">saravanapriyan2004@gmail.com</a></li>
+                <li><Phone size={16} /><a href="tel:+918122104454">+91 81221 04454</a></li>
               </ul>
-            </div>
+            </aside>
           </div>
         </section>
 
-        {/* ── EDUCATION ─────────────────────────────────────────── */}
-        <section className="education gsap-reveal" id="education">
+        <section id="education" className="gsap-reveal">
           <div className="section-header">
-            <span className="section-label">
-              <GraduationCap size={14} aria-hidden="true" />
-              {isSakura ? '学歴' : 'Education'}
-            </span>
-            <h2>{isSakura ? '学歴' : 'Academic Journey'}</h2>
+            <p className="section-label"><GraduationCap size={14} /> Education</p>
+            <h2>Academic foundation</h2>
           </div>
 
           <div className="timeline">
-            <motion.div
-              className="timeline-item"
-              variants={cardVariants}
-              initial={reduceMotion ? false : 'hidden'}
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.3 }}
-            >
-              <div className="timeline-dot" />
+            <article className="timeline-item">
+              <span className="timeline-dot" aria-hidden="true" />
               <div className="glass-card timeline-card">
                 <div className="timeline-head">
                   <div>
-                    <h3>{isSakura ? 'B.Tech 人工知能・データサイエンス' : 'B.Tech — AI & Data Science'}</h3>
-                    <p className="timeline-inst">M. Kumarasamy College of Engineering, Karur</p>
+                    <h3>B.Tech Information Technology</h3>
+                    <p className="timeline-inst">Kongu Engineering College</p>
                   </div>
-                  <span className="timeline-badge">{isSakura ? '2027卒予定' : 'Exp. 2027'}</span>
+                  <span className="timeline-badge">2022 - 2026</span>
                 </div>
                 <p className="timeline-detail">
-                  <strong>CGPA: 8.24</strong>
-                  {isSakura ? ' — 継続中' : ' · Currently pursuing'}
+                  Current CGPA: <strong>8.04</strong>
                 </p>
               </div>
-            </motion.div>
-
-            <motion.div
-              className="timeline-item"
-              variants={cardVariants}
-              initial={reduceMotion ? false : 'hidden'}
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ delay: 0.15 }}
-            >
-              <div className="timeline-dot" />
-              <div className="glass-card timeline-card">
-                <div className="timeline-head">
-                  <div>
-                    <h3>{isSakura ? '高等学校 (HSC)' : 'Higher Secondary Certificate (HSC)'}</h3>
-                    <p className="timeline-inst">Lord's Park Matric Higher Secondary School</p>
-                  </div>
-                  <span className="timeline-badge">2022–23</span>
-                </div>
-                <p className="timeline-detail">
-                  <strong>{isSakura ? '成績: 90%' : 'Percentage: 90%'}</strong>
-                </p>
-              </div>
-            </motion.div>
+            </article>
           </div>
         </section>
 
-        {/* ── SKILLS ────────────────────────────────────────────── */}
-        <section className="skills gsap-reveal" id="skills">
+        <section id="skills" className="gsap-reveal">
           <div className="section-header">
-            <span className="section-label">
-              <Code2 size={14} aria-hidden="true" />
-              {isSakura ? 'スキル' : 'Skills'}
-            </span>
-            <h2>{isSakura ? '技術スキル' : 'Skills & Capabilities'}</h2>
+            <p className="section-label"><Code2 size={14} /> Skills</p>
+            <h2>Tools I use to deliver work</h2>
           </div>
 
           <div className="skills-bento">
-            {Object.values(skills).map((cat, i) => {
-              const Icon = cat.icon
+            {Object.values(skills).map((group) => {
+              const Icon = group.icon
               return (
-                <motion.div
-                  key={cat.labelEn}
-                  className="glass-card skill-card"
-                  variants={cardVariants}
-                  initial={reduceMotion ? false : 'hidden'}
-                  whileInView="visible"
-                  viewport={{ once: true, amount: 0.3 }}
-                  transition={{ delay: i * 0.08 }}
-                >
+                <article key={group.labelEn} className="glass-card skill-card">
                   <div className="skill-card-header">
-                    <div className="skill-icon">
-                      <Icon size={18} aria-hidden="true" />
-                    </div>
-                    <h3>{isSakura ? cat.labelJp : cat.labelEn}</h3>
+                    <span className="skill-icon">
+                      <Icon size={16} />
+                    </span>
+                    <h3>{group.labelEn}</h3>
                   </div>
                   <div className="skill-pills">
-                    {cat.items.map((item) => (
+                    {group.items.map((item) => (
                       <span key={item} className="skill-pill">{item}</span>
                     ))}
                   </div>
-                </motion.div>
+                </article>
               )
             })}
           </div>
         </section>
 
-        {/* ── PROJECTS ──────────────────────────────────────────── */}
-        <section className="projects gsap-reveal" id="projects">
+        <section id="projects" className="gsap-reveal">
           <div className="section-header">
-            <span className="section-label">
-              <Briefcase size={14} aria-hidden="true" />
-              {isSakura ? 'プロジェクト' : 'Projects'}
-            </span>
-            <h2>{isSakura ? 'プロジェクト' : 'Selected Work'}</h2>
+            <p className="section-label"><Briefcase size={14} /> Projects</p>
+            <h2>Selected work</h2>
           </div>
 
           <div className="project-list">
-            {projects.map((p, i) => (
-              <motion.article
-                key={p.title}
-                className="glass-card project-card"
-                variants={cardVariants}
-                initial={reduceMotion ? false : 'hidden'}
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ delay: i * 0.1 }}
-              >
-                <div className="project-num">{p.num}</div>
-                <div className="project-body">
+            {projects.map((project) => (
+              <article key={project.num} className="glass-card project-card">
+                <span className="project-num">{project.num}</span>
+                <div>
                   <div className="project-head">
-                    <h3>{isSakura ? p.titleJp : p.title}</h3>
+                    <h3>{project.title}</h3>
                     <div className="project-stack">
-                      {p.stack.map((s) => (
-                        <span key={s} className="stack-badge">{s}</span>
+                      {project.stack.map((stackItem) => (
+                        <span key={stackItem} className="stack-badge">{stackItem}</span>
                       ))}
                     </div>
                   </div>
                   <ul className="project-bullets">
-                    {(isSakura ? p.bulletsJp : p.bullets).map((b) => (
-                      <li key={b}>{b}</li>
+                    {project.bullets.map((point) => (
+                      <li key={point}>{point}</li>
                     ))}
                   </ul>
                 </div>
-              </motion.article>
+              </article>
             ))}
           </div>
         </section>
 
-        {/* ── CERTIFICATIONS ────────────────────────────────────── */}
-        <section className="certs gsap-reveal" id="certifications">
+        <section id="certifications" className="gsap-reveal">
           <div className="section-header">
-            <span className="section-label">
-              <BookOpen size={14} aria-hidden="true" />
-              {isSakura ? '資格・出版' : 'Certifications & Publication'}
-            </span>
-            <h2>{isSakura ? '認定資格・出版' : 'Achievements'}</h2>
+            <p className="section-label"><Sparkles size={14} /> Credentials</p>
+            <h2>Certifications and learning</h2>
           </div>
 
           <div className="certs-grid">
-            {/* Publication card */}
-            <motion.div
-              className="glass-card pub-card"
-              variants={cardVariants}
-              initial={reduceMotion ? false : 'hidden'}
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.3 }}
-            >
-              <div className="pub-tag">{isSakura ? '論文' : 'Publication'}</div>
-              <h3>LearnAID</h3>
+            <article className="glass-card pub-card">
+              <span className="pub-tag">Focus Area</span>
+              <h3>Data & Web Engineering</h3>
               <p>
-                {isSakura
-                  ? 'LearnAID: 認知コンピューティングベースの学習支援システムを設計し、個別推薦・参加促進・学習成果向上に注力しました。'
-                  : 'LearnAID — A cognitive computing-based intelligent learning support system with focus on personalization, engagement, and measurable learning outcomes.'}
+                I focus on practical software work: building dependable interfaces, using data responsibly,
+                and improving real workflows.
               </p>
-            </motion.div>
+            </article>
 
-            {/* Cert cards */}
             <div className="cert-list">
-              {certifications.map((cert, i) => {
-                const Icon = cert.icon
-                return (
-                  <motion.div
-                    key={cert.text}
-                    className="glass-card cert-item"
-                    variants={cardVariants}
-                    initial={reduceMotion ? false : 'hidden'}
-                    whileInView="visible"
-                    viewport={{ once: true, amount: 0.3 }}
-                    transition={{ delay: i * 0.07 }}
-                  >
-                    <div className="cert-icon">
-                      <Icon size={16} aria-hidden="true" />
-                    </div>
-                    <span>{cert.text}</span>
-                  </motion.div>
-                )
-              })}
+              {certifications.map((cert) => (
+                <article key={cert.text} className="glass-card cert-item">
+                  <span className="cert-icon">
+                    <cert.icon size={16} />
+                  </span>
+                  <span>{cert.text}</span>
+                </article>
+              ))}
             </div>
           </div>
         </section>
       </main>
 
-      {/* ── CONTACT / FOOTER ─────────────────────────────────── */}
-      <footer className="contact gsap-reveal" id="contact">
+      <section id="contact" className="contact gsap-reveal">
         <div className="contact-inner">
           <div className="contact-text">
-            <span className="section-label">
-              <Mail size={14} aria-hidden="true" />
-              {isSakura ? '連絡先' : 'Contact'}
-            </span>
-            <h2>{isSakura ? '一緒に作りましょう。' : "Let's Build Together."}</h2>
+            <p className="section-label"><Users size={14} /> Contact</p>
+            <h2>Open to internships and project collaborations</h2>
             <p>
-              {isSakura
-                ? '技術的に優れたプロジェクトに貢献したいと考えています。お気軽にご連絡ください。'
-                : "I'm open to internships, collaborations, and exciting projects. Reach out and let's make something great."}
+              If you are building something useful and need a dependable developer, I would love to connect.
             </p>
           </div>
 
           <div className="contact-links">
-            <a href="mailto:saravanapriyanst@gmail.com" id="contact-email" className="contact-btn primary">
-              <Mail size={16} aria-hidden="true" />
-              Email Me
+            <a href="mailto:saravanapriyan2004@gmail.com" className="contact-btn primary">
+              <Mail size={16} /> Email Me
             </a>
-            <a
-              href="https://www.linkedin.com/in/saravana-priyan-s-t/"
-              id="contact-linkedin"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="contact-btn"
-            >
-              LinkedIn
-              <ArrowUpRight size={16} aria-hidden="true" />
-            </a>
-            <a
-              href="https://github.com/ST-SARAVANAPRIYAN"
-              id="contact-github"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="contact-btn"
-            >
-              GitHub
-              <ArrowUpRight size={16} aria-hidden="true" />
+            <a href="tel:+918122104454" className="contact-btn">
+              <Phone size={16} /> Call
             </a>
           </div>
         </div>
+      </section>
 
-        <p className="footer-copy">
-          © {new Date().getFullYear()} Saravana Priyan S T · Built with React & GSAP
-        </p>
-      </footer>
+      <p className="footer-copy">© {new Date().getFullYear()} Saravana Priyan. Built with clarity and care.</p>
     </div>
   )
 }
