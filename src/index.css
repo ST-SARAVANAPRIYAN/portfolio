@@ -1,13 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Serif+JP:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 :root {
-  --bg-1: #0a0a0a;
-  --bg-2: #120a08;
-  --bg-3: #0a0a0a;
-  --dark-accent-1: #ec5b2b;
-  --dark-accent-2: #ee7948;
-  --font-base: 'Manrope', sans-serif;
-  --font-display: 'Sora', sans-serif;
+  --page-dark: #111318;
+  --page-sakura: #f7efe8;
 }
 
 *,
@@ -26,9 +21,7 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Lenis smooth scroll overrides */
-html.lenis,
-html.lenis body {
+html.lenis {
   height: auto;
 }
 
@@ -36,67 +29,67 @@ html.lenis body {
   scroll-behavior: auto !important;
 }
 
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
 .lenis.lenis-stopped {
   overflow: hidden;
 }
 
 body {
-  font-family: var(--font-base);
-  color: #f4dfd7;
-  line-height: 1.55;
-  background:
-    radial-gradient(ellipse at 15% 6%, rgba(236, 91, 43, 0.18), transparent 36%),
-    radial-gradient(ellipse at 86% 13%, rgba(238, 121, 72, 0.12), transparent 32%),
-    radial-gradient(ellipse at 50% 80%, rgba(236, 91, 43, 0.07), transparent 42%),
-    linear-gradient(175deg, var(--bg-1) 0%, var(--bg-2) 50%, var(--bg-3) 100%);
-  background-attachment: fixed;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #ece6df;
+  line-height: 1.6;
+  background: var(--page-dark);
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background 450ms ease;
+  transition: background 280ms ease, color 280ms ease;
 }
 
 body[data-theme='sakura'] {
-  color: #52303c;
-  background:
-    radial-gradient(ellipse at 12% 8%, rgba(243, 166, 191, 0.22), transparent 36%),
-    radial-gradient(ellipse at 85% 15%, rgba(255, 210, 225, 0.3), transparent 28%),
-    radial-gradient(ellipse at 50% 75%, rgba(255, 180, 210, 0.1), transparent 40%),
-    linear-gradient(168deg, #fff8fb 0%, #fff1f6 50%, #ffe8f0 100%);
-  background-attachment: fixed;
+  color: #433339;
+  background: var(--page-sakura);
 }
 
 #root {
   min-height: 100vh;
 }
 
-/* Global selection */
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
 ::selection {
-  background: rgba(236, 91, 43, 0.32);
-  color: #fff2eb;
+  background: rgba(255, 122, 69, 0.28);
+  color: #fff4ed;
 }
 
 body[data-theme='sakura'] ::selection {
-  background: rgba(212, 96, 138, 0.22);
-  color: #2e1020;
+  background: rgba(180, 90, 114, 0.22);
+  color: #24181e;
 }
 
-/* Focus rings */
 :focus-visible {
-  outline: 2px solid rgba(236, 91, 43, 0.78);
+  outline: 2px solid rgba(255, 122, 69, 0.84);
   outline-offset: 3px;
-  border-radius: 4px;
 }
 
 body[data-theme='sakura'] :focus-visible {
-  outline-color: rgba(212, 96, 138, 0.7);
+  outline-color: rgba(180, 90, 114, 0.72);
 }
 
-/* Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -104,10 +97,10 @@ body[data-theme='sakura'] :focus-visible {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(236, 91, 43, 0.34);
+  background: rgba(255, 122, 69, 0.34);
   border-radius: 999px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(238, 121, 72, 0.56);
+body[data-theme='sakura'] ::-webkit-scrollbar-thumb {
+  background: rgba(180, 90, 114, 0.26);
 }
