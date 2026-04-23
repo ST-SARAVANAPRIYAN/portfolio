@@ -711,8 +711,11 @@ if (card && revealLayer && blobGroup) {
 
   const setTargetFromEvent = (event) => {
     const rect = getRect()
-    targetX = event.clientX - rect.left
-    targetY = event.clientY - rect.top
+    const touch = event.touches?.[0] ?? event.changedTouches?.[0]
+    const clientX = touch ? touch.clientX : event.clientX
+    const clientY = touch ? touch.clientY : event.clientY
+    targetX = clientX - rect.left
+    targetY = clientY - rect.top
   }
 
   const animate = (time) => {
@@ -848,6 +851,32 @@ if (card && revealLayer && blobGroup) {
   card.addEventListener('pointercancel', () => {
     endInteractive()
   })
+
+  card.addEventListener(
+    'touchstart',
+    (event) => {
+      startInteractive(event)
+    },
+    { passive: true },
+  )
+
+  card.addEventListener(
+    'touchmove',
+    (event) => {
+      isHovering = true
+      setTargetFromEvent(event)
+      ensureAnimation()
+    },
+    { passive: true },
+  )
+
+  card.addEventListener(
+    'touchend',
+    () => {
+      endInteractive()
+    },
+    { passive: true },
+  )
 
   card.addEventListener('click', () => {
     const rect = getRect()
