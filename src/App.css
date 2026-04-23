@@ -289,10 +289,6 @@ section,
   padding: 5.5rem clamp(1.5rem, 4vw, 3.5rem);
 }
 
-section + section {
-  border-top: 1px solid var(--border);
-}
-
 .hero {
   min-height: calc(100svh - 5rem);
   display: grid;
@@ -576,10 +572,7 @@ section h2,
 .pub-card::before,
 .cert-item::before,
 .contact-inner::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-top: 1px solid var(--border);
+  content: none;
   pointer-events: none;
 }
 
@@ -929,8 +922,20 @@ section h2,
     padding: 0.8rem;
   }
 
+  .topbar-right {
+    gap: 0.45rem;
+  }
+
   .theme-switch {
-    display: none;
+    display: inline-flex;
+    gap: 0.2rem;
+    padding: 0.18rem;
+  }
+
+  .theme-switch button {
+    padding: 0.44rem 0.56rem;
+    font-size: 0.64rem;
+    letter-spacing: 0.03em;
   }
 
   .hero {

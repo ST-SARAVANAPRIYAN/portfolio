@@ -803,7 +803,7 @@ if (card && revealLayer && blobGroup) {
 
   visibilityObserver.observe(card)
 
-  card.addEventListener('pointerenter', (event) => {
+  const startInteractive = (event) => {
     isHovering = true
     splashBoost = Math.max(splashBoost, 0.35)
     setTargetFromEvent(event)
@@ -812,6 +812,19 @@ if (card && revealLayer && blobGroup) {
     if (frontImageEl) frontImageEl.style.transitionDuration = '110ms'
     if (backImageEl) backImageEl.style.transitionDuration = '110ms'
     ensureAnimation()
+  }
+
+  const endInteractive = () => {
+    isHovering = false
+    splashBoost = Math.max(splashBoost, 0.2)
+    targetRadius = 48
+    if (frontImageEl) frontImageEl.style.transitionDuration = '170ms'
+    if (backImageEl) backImageEl.style.transitionDuration = '170ms'
+    ensureAnimation()
+  }
+
+  card.addEventListener('pointerenter', (event) => {
+    startInteractive(event)
   })
 
   card.addEventListener('pointermove', (event) => {
@@ -821,12 +834,19 @@ if (card && revealLayer && blobGroup) {
   })
 
   card.addEventListener('pointerleave', () => {
-    isHovering = false
-    splashBoost = Math.max(splashBoost, 0.2)
-    targetRadius = 48
-    if (frontImageEl) frontImageEl.style.transitionDuration = '170ms'
-    if (backImageEl) backImageEl.style.transitionDuration = '170ms'
-    ensureAnimation()
+    endInteractive()
+  })
+
+  card.addEventListener('pointerdown', (event) => {
+    startInteractive(event)
+  })
+
+  card.addEventListener('pointerup', () => {
+    endInteractive()
+  })
+
+  card.addEventListener('pointercancel', () => {
+    endInteractive()
   })
 
   card.addEventListener('click', () => {

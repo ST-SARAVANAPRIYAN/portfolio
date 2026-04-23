@@ -5,6 +5,7 @@
   overflow: hidden;
   isolation: isolate;
   cursor: default;
+  touch-action: manipulation;
   --img-pan-x: 0px;
   --img-pan-y: 0px;
   --img-zoom: 1;
@@ -90,9 +91,5 @@
   .hrc-image {
     object-fit: cover;
     object-position: center 18%;
-  }
-
-  .hrc-reveal {
-    display: none;
   }
 }
