@@ -15,9 +15,7 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  background:
-    linear-gradient(180deg, rgba(8, 11, 16, 0.08), transparent 22%, transparent 72%, rgba(8, 11, 16, 0.24)),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent 28%);
+  background: none;
   pointer-events: none;
 }
 
@@ -26,18 +24,16 @@
   position: absolute;
   inset: 0;
   z-index: 3;
-  background: linear-gradient(180deg, transparent 52%, rgba(10, 12, 16, 0.16));
+  background: none;
   pointer-events: none;
 }
 
 .theme-sakura .hover-reveal-card::before {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 18%, transparent 72%, rgba(132, 87, 100, 0.12)),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.18), transparent 32%);
+  background: none;
 }
 
 .theme-sakura .hover-reveal-card::after {
-  background: linear-gradient(180deg, transparent 52%, rgba(120, 85, 96, 0.1));
+  background: none;
 }
 
 .hrc-image {

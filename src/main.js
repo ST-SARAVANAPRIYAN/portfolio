@@ -1,9 +1,5 @@
-import './index.css'
-import './App.css'
-import './components/HoverRevealCard.css'
-import Lenis from 'lenis'
-import frontImage from './assets/front.png'
-import backImage from './assets/back.png'
+const frontImage = './src/assets/front.png'
+const backImage = './src/assets/back.png'
 
 const root = document.querySelector('#root')
 
@@ -526,18 +522,6 @@ const updateScrollProgress = (scrollY = window.scrollY) => {
   scrollProgress.style.transform = `scaleX(${Math.max(0, Math.min(1, progress))})`
 }
 
-const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-const lenis = prefersReducedMotion
-  ? null
-  : new Lenis({
-      duration: 1.15,
-      smoothWheel: true,
-      smoothTouch: true,
-      touchMultiplier: 1.05,
-      wheelMultiplier: 0.92,
-      easing: (t) => 1 - Math.pow(1 - t, 4),
-    })
-
 let lastScrollY = window.scrollY
 
 const handleScrollFrame = (scrollY) => {
@@ -546,26 +530,20 @@ const handleScrollFrame = (scrollY) => {
   updateScrollProgress(scrollY)
 }
 
-if (lenis) {
-  lenis.on('scroll', ({ scroll }) => {
-    handleScrollFrame(scroll)
-  })
+let scrollTicking = false
 
-  const raf = (time) => {
-    lenis.raf(time)
-    requestAnimationFrame(raf)
-  }
-
-  requestAnimationFrame(raf)
-} else {
-  window.addEventListener(
-    'scroll',
-    () => {
+window.addEventListener(
+  'scroll',
+  () => {
+    if (scrollTicking) return
+    scrollTicking = true
+    window.requestAnimationFrame(() => {
       handleScrollFrame(window.scrollY)
-    },
-    { passive: true },
-  )
-}
+      scrollTicking = false
+    })
+  },
+  { passive: true },
+)
 
 window.addEventListener('resize', () => updateScrollProgress(lastScrollY))
 updateScrollProgress()

@@ -475,7 +475,6 @@ section + section {
   content: '';
   position: absolute;
   inset: 3rem 1.5rem -1rem -1rem;
-  border: 1px solid var(--border);
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--panel) 78%, transparent), transparent),
     linear-gradient(135deg, var(--panel-alt), transparent 52%);
