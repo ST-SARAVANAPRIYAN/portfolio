@@ -25,6 +25,7 @@ root.innerHTML = `
         <a href="#education" class="nav-link">Education</a>
         <a href="#skills" class="nav-link">Skills</a>
         <a href="#projects" class="nav-link">Projects</a>
+        <a href="#opensource" class="nav-link">Open Source</a>
         <a href="#certifications" class="nav-link">Certifications</a>
         <a href="#contact" class="nav-link">Contact</a>
       </nav>
@@ -51,6 +52,7 @@ root.innerHTML = `
       <a href="#education" class="mobile-nav-link" data-close-mobile="true">Education</a>
       <a href="#skills" class="mobile-nav-link" data-close-mobile="true">Skills</a>
       <a href="#projects" class="mobile-nav-link" data-close-mobile="true">Projects</a>
+      <a href="#opensource" class="mobile-nav-link" data-close-mobile="true">Open Source</a>
       <a href="#certifications" class="mobile-nav-link" data-close-mobile="true">Certifications</a>
       <a href="#contact" class="mobile-nav-link" data-close-mobile="true">Contact</a>
     </nav>
@@ -173,13 +175,13 @@ root.innerHTML = `
             <div class="timeline-card">
               <div class="timeline-head">
                 <div>
-                  <h3>B.Tech Information Technology</h3>
-                  <p class="timeline-inst">Kongu Engineering College</p>
+                  <h3>B.Tech AI &amp; Data Science</h3>
+                  <p class="timeline-inst">M. Kumarasamy College of Engineering, Karur</p>
                 </div>
-                <span class="timeline-badge">2022 - 2026</span>
+                <span class="timeline-badge">Expected: 2027</span>
               </div>
               <p class="timeline-detail">
-                Current CGPA: <strong>8.04</strong>
+                Current CGPA: <strong>8.24</strong>
               </p>
             </div>
           </article>
@@ -315,6 +317,29 @@ root.innerHTML = `
         </div>
       </section>
 
+      <section id="opensource" class="gsap-reveal">
+        <div class="section-header">
+          <p class="section-label"><span class="mini-icon" aria-hidden="true">•</span> Open Source</p>
+          <h2>Contributions to the community</h2>
+        </div>
+
+        <div class="opensource-list">
+          <article class="opensource-card">
+            <div class="opensource-header">
+              <h3>iNiR</h3>
+              <a href="https://github.com/snowarch/iNiR" class="inline-link" target="_blank" rel="noreferrer">View Repo →</a>
+            </div>
+            <p class="opensource-desc">
+              Active contributor to the iNiR project, collaborating on features, bug fixes, and code reviews.
+            </p>
+            <div class="opensource-meta">
+              <span class="stack-badge">Contributor</span>
+              <span class="stack-badge">snowarch/iNiR</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
       <section id="certifications" class="gsap-reveal">
         <div class="section-header">
           <p class="section-label"><span class="mini-icon" aria-hidden="true">•</span> Credentials</p>
@@ -324,7 +349,7 @@ root.innerHTML = `
         <div class="certs-grid">
           <article class="pub-card">
             <span class="pub-tag">Focus Area</span>
-            <h3>Data &amp; Web Engineering</h3>
+            <h3>Data & Web Engineering</h3>
             <p>
               I focus on practical software work: building dependable interfaces, using data responsibly,
               and improving real workflows.
@@ -338,6 +363,10 @@ root.innerHTML = `
             </article>
             <article class="cert-item">
               <span class="cert-icon">•</span>
+              <span>Internship Certificate</span>
+            </article>
+            <article class="cert-item">
+              <span class="cert-icon">•</span>
               <span>Predictive Modeling with IBM SPSS Modeler</span>
             </article>
             <article class="cert-item">
@@ -348,6 +377,43 @@ root.innerHTML = `
               <span class="cert-icon">•</span>
               <span>Data Visualization with Python - IBM Cognitive Class</span>
             </article>
+          </div>
+        </div>
+
+        <div class="cert-showcase gsap-reveal">
+          <p class="cert-showcase-label">
+            <span class="mini-icon" aria-hidden="true">•</span> Featured Credential
+          </p>
+          <div class="cert-cards">
+            <figure class="cert-doc-card cert-animated-card">
+              <div class="cert-card-align" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <figcaption class="cert-doc-caption">
+                <span class="cert-doc-title">JLPT N4 Certificate</span>
+                <span class="cert-doc-year">2024</span>
+              </figcaption>
+              <div class="cert-doc-frame">
+                <img src="./src/assets/n4-certificate.png" alt="JLPT N4 Certificate" loading="lazy" draggable="false" data-protected="true" />
+              </div>
+            </figure>
+
+            <figure class="cert-doc-card cert-animated-card">
+              <div class="cert-card-align" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <figcaption class="cert-doc-caption">
+                <span class="cert-doc-title">Internship Certificate</span>
+                <span class="cert-doc-year">2026</span>
+              </figcaption>
+              <div class="cert-doc-frame">
+                <img src="./src/assets/intern-cert.png" alt="Internship Certificate" loading="lazy" draggable="false" data-protected="true" />
+              </div>
+            </figure>
           </div>
         </div>
       </section>
@@ -434,14 +500,21 @@ const updateMobileState = () => {
   document.body.style.overflow = mobileOpen ? 'hidden' : ''
 }
 
-const applyTheme = (theme) => {
+const applyTheme = (theme, { skipTransition = false } = {}) => {
   const isSakura = theme === 'sakura'
 
   if (appRoot) {
     appRoot.classList.toggle('theme-sakura', isSakura)
   }
 
-  document.body.setAttribute('data-theme', theme)
+  if (skipTransition) {
+    document.body.style.transition = 'none'
+    document.body.setAttribute('data-theme', theme)
+    void document.body.offsetWidth
+    document.body.style.transition = ''
+  } else {
+    document.body.setAttribute('data-theme', theme)
+  }
 
   if (darkBtn) darkBtn.classList.toggle('active', !isSakura)
   if (sakuraBtn) sakuraBtn.classList.toggle('active', isSakura)
@@ -454,7 +527,9 @@ const setTheme = (theme, point = null, { immediate = false } = {}) => {
   const x = point?.x ?? window.innerWidth * 0.5
   const y = point?.y ?? window.innerHeight * 0.5
 
-  if (immediate || !themeRipple) {
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+  if (immediate || !themeRipple || prefersReduced) {
     applyTheme(theme)
     return
   }
@@ -468,10 +543,12 @@ const setTheme = (theme, point = null, { immediate = false } = {}) => {
 }
 
 if (themeRipple) {
-  themeRipple.addEventListener('animationend', () => {
+  themeRipple.addEventListener('animationend', (event) => {
+    if (event.animationName !== 'theme-ripple-expand') return
+
     const nextTheme = themeRipple.dataset.nextTheme
     if (nextTheme) {
-      applyTheme(nextTheme)
+      applyTheme(nextTheme, { skipTransition: true })
       themeRipple.dataset.nextTheme = ''
     }
     themeRipple.classList.remove('active', 'to-dark', 'to-sakura')
@@ -602,6 +679,60 @@ if (footerCopy) {
   })
 }
 
+// Protect certificate and marksheet images
+const protectedImages = document.querySelectorAll('img[data-protected="true"]')
+protectedImages.forEach((img) => {
+  // Prevent right-click context menu
+  img.addEventListener('contextmenu', (e) => {
+    e.preventDefault()
+    return false
+  })
+
+  // Prevent drag and drop
+  img.addEventListener('dragstart', (e) => {
+    e.preventDefault()
+    return false
+  })
+
+  // Prevent opening in new tab with middle click
+  img.addEventListener('auxclick', (e) => {
+    if (e.button === 1) {
+      e.preventDefault()
+      return false
+    }
+  })
+
+  // Prevent selecting and copying
+  img.addEventListener('mousedown', (e) => {
+    if (e.detail > 1) {
+      e.preventDefault()
+    }
+  })
+})
+
+const certFrameImages = document.querySelectorAll('.cert-doc-card .cert-doc-frame img')
+
+const applyCertFrameRatio = (img) => {
+  if (!img?.naturalWidth || !img?.naturalHeight) {
+    return
+  }
+
+  const frame = img.closest('.cert-doc-frame')
+  if (!frame) {
+    return
+  }
+
+  frame.style.setProperty('--cert-ratio', `${img.naturalWidth} / ${img.naturalHeight}`)
+}
+
+certFrameImages.forEach((img) => {
+  if (img.complete) {
+    applyCertFrameRatio(img)
+  } else {
+    img.addEventListener('load', () => applyCertFrameRatio(img), { once: true })
+  }
+})
+
 const konami = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a']
 let konamiIndex = 0
 
@@ -642,10 +773,36 @@ if (card && revealLayer && blobGroup) {
   let isVisible = true
   let rafId = 0
   let rippleTimer = null
+  let floodTimer = null
   let rectCache = null
   let rectDirty = true
   let splashBoost = 0
+  let clickCharge = 0
+  let rapidTapCount = 0
+  let lastTapAt = 0
+  let floodUntil = 0
+  let floodRadius = 0
+  let idleNextTrickAt = 0
+  let idleTrickUntil = 0
+  let idleTrick = 'float'
+  let idleMoodX = 0.5
+  let idleMoodY = 0.5
+  let idleShapeKick = 0
   const blobCount = 32
+  const idleTricks = ['edge-dash', 'corner-peek', 'big-pop', 'tiny-sneak', 'squash', 'ziggle']
+  const idleRippleSeeds = Array.from({ length: 3 }).map((_, index) => {
+    const direction = index % 2 === 0 ? 1 : -1
+    return {
+      phaseX: Math.random() * Math.PI * 2 + index * 1.2,
+      phaseY: Math.random() * Math.PI * 2 + index * 0.9,
+      drift: (0.6 + Math.random() * 0.75) * direction,
+      orbitX: 0.12 + Math.random() * 0.11,
+      orbitY: 0.1 + Math.random() * 0.1,
+      spin: (0.42 + Math.random() * 0.45) * (index === 1 ? -1 : 1),
+      centerAngle: (Math.PI * 2 * index) / 3,
+      centerRadius: 0.08 + Math.random() * 0.05,
+    }
+  })
 
   const blobs = Array.from({ length: blobCount }).map((_, i) => {
     const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
@@ -671,9 +828,80 @@ if (card && revealLayer && blobGroup) {
       pulseAmp: isSatellite ? 0.26 + Math.random() * 0.22 : 0.12 + Math.random() * 0.24,
       sizeBias: isSatellite ? 0.26 + Math.random() * 0.26 : 0.52 + Math.random() * 0.62,
       splashBias: Math.random(),
+      trickBias: Math.random(),
+      cluster: i % idleRippleSeeds.length,
+      wiggleSpeed: 1.6 + Math.random() * 4.2,
+      elastic: isSatellite ? 1.25 + Math.random() * 1.4 : 0.65 + Math.random() * 1.1,
       isSatellite,
     }
   })
+
+  const scheduleIdleTrick = (time) => {
+    idleTrick = idleTricks[Math.floor(Math.random() * idleTricks.length)]
+    idleTrickUntil = time + 650 + Math.random() * 1050
+    idleNextTrickAt = idleTrickUntil + 520 + Math.random() * 1450
+    idleShapeKick = 1
+
+    const edgePadding = 0.1
+    const side = Math.floor(Math.random() * 4)
+
+    if (idleTrick === 'edge-dash') {
+      idleMoodX = side === 0 ? edgePadding : side === 1 ? 1 - edgePadding : 0.16 + Math.random() * 0.68
+      idleMoodY = side === 2 ? edgePadding : side === 3 ? 1 - edgePadding : 0.14 + Math.random() * 0.72
+      return
+    }
+
+    if (idleTrick === 'corner-peek') {
+      idleMoodX = Math.random() > 0.5 ? 0.08 : 0.92
+      idleMoodY = Math.random() > 0.5 ? 0.09 : 0.91
+      return
+    }
+
+    if (idleTrick === 'tiny-sneak') {
+      idleMoodX = 0.25 + Math.random() * 0.5
+      idleMoodY = 0.2 + Math.random() * 0.6
+      return
+    }
+
+    if (idleTrick === 'squash') {
+      idleMoodX = 0.18 + Math.random() * 0.64
+      idleMoodY = Math.random() > 0.5 ? 0.18 : 0.82
+      return
+    }
+
+    idleMoodX = 0.18 + Math.random() * 0.64
+    idleMoodY = 0.18 + Math.random() * 0.64
+  }
+
+  const getIdleRadius = (rect, time) => {
+    const base = Math.max(36, Math.min(58, rect.width * 0.12))
+
+    if (idleTrick === 'big-pop') {
+      return Math.min(rect.width * 0.46, base * 2.25)
+    }
+
+    if (idleTrick === 'tiny-sneak') {
+      return Math.max(18, base * 0.45)
+    }
+
+    if (idleTrick === 'squash') {
+      return base * (0.82 + Math.sin(time / 88) * 0.18)
+    }
+
+    if (idleTrick === 'ziggle') {
+      return base * (1.05 + Math.sin(time / 120) * 0.46)
+    }
+
+    if (idleTrick === 'corner-peek') {
+      return base * 1.28
+    }
+
+    if (idleTrick === 'edge-dash') {
+      return base * 1.45
+    }
+
+    return base * (1 + Math.sin(time / 760) * 0.1 + Math.cos(time / 430) * 0.08)
+  }
 
   const getRect = () => {
     if (!rectCache || rectDirty) {
@@ -691,6 +919,12 @@ if (card && revealLayer && blobGroup) {
     targetY = y
     radius = 48
     targetRadius = 48
+    idleNextTrickAt = 0
+    idleTrickUntil = 0
+    idleTrick = 'float'
+    idleMoodX = 0.5
+    idleMoodY = 0.5
+    idleShapeKick = 0
     blobs.forEach((blob) => {
       blob.x = x + blob.ox
       blob.y = y + blob.oy
@@ -718,6 +952,55 @@ if (card && revealLayer && blobGroup) {
     targetY = clientY - rect.top
   }
 
+  const getHoverBaseRadius = (rect) => Math.min(126, Math.max(80, rect.width * 0.18))
+
+  const handleTapCharge = (event) => {
+    const now = performance.now()
+    const rect = getRect()
+    const tapGap = now - lastTapAt
+    lastTapAt = now
+
+    rapidTapCount = tapGap < 320 ? rapidTapCount + 1 : 1
+    clickCharge = Math.min(clickCharge + 1, 10)
+    splashBoost = Math.max(splashBoost, 1.2)
+
+    setTargetFromEvent(event)
+
+    if (rapidTapCount >= 4) {
+      floodRadius = Math.max(window.innerWidth, window.innerHeight) * 1.15
+      floodUntil = now + 2500
+      targetRadius = floodRadius
+      clickCharge = 0
+
+      if (floodTimer) {
+        window.clearTimeout(floodTimer)
+      }
+
+      floodTimer = window.setTimeout(() => {
+        floodUntil = 0
+        rapidTapCount = 0
+        targetRadius = isHovering ? getHoverBaseRadius(rect) : 48
+        ensureAnimation()
+      }, 2550)
+
+      ensureAnimation()
+      return
+    }
+
+    const hoverBase = getHoverBaseRadius(rect)
+    targetRadius = Math.min(rect.width * 1.04, hoverBase + clickCharge * 22)
+
+    if (rippleTimer) {
+      window.clearTimeout(rippleTimer)
+    }
+
+    rippleTimer = window.setTimeout(() => {
+      clickCharge = Math.max(0, clickCharge - 1)
+      targetRadius = isHovering ? hoverBase : 48
+      ensureAnimation()
+    }, 500)
+  }
+
   const animate = (time) => {
     rafId = 0
     const rect = getRect()
@@ -726,17 +1009,44 @@ if (card && revealLayer && blobGroup) {
     if (!isHovering) {
       const cx = rect.width * 0.5
       const cy = rect.height * 0.5
-      targetX = cx + Math.sin(time / 900) * (rect.width * 0.06)
-      targetY = cy + Math.cos(time / 820) * (rect.height * 0.05)
-      targetRadius += (48 - targetRadius) * 0.2
-      splashBoost += (0 - splashBoost) * 0.08
+      if (!idleNextTrickAt || time > idleNextTrickAt) {
+        scheduleIdleTrick(time)
+      }
+
+      const trickActive = time < idleTrickUntil
+
+      if (trickActive) {
+        const jitter = idleTrick === 'ziggle' ? 0.09 : 0.035
+        targetX = rect.width * idleMoodX + Math.sin(time / 65) * rect.width * jitter
+        targetY = rect.height * idleMoodY + Math.cos(time / 78) * rect.height * jitter
+        targetRadius += (getIdleRadius(rect, time) - targetRadius) * 0.48
+        splashBoost += (0.78 - splashBoost) * 0.16
+      } else {
+        idleTrick = 'float'
+        targetX = cx + Math.sin(time / 900) * (rect.width * 0.07) + Math.sin(time / 240) * (rect.width * 0.018)
+        targetY = cy + Math.cos(time / 820) * (rect.height * 0.055) + Math.cos(time / 310) * (rect.height * 0.018)
+        targetRadius += (getIdleRadius(rect, time) - targetRadius) * 0.22
+        splashBoost += (0.08 - splashBoost) * 0.08
+      }
+
+      idleShapeKick += (0 - idleShapeKick) * 0.055
     } else {
-      splashBoost += (1 - splashBoost) * 0.14
+      const now = performance.now()
+      const floodActive = now < floodUntil
+      splashBoost += ((floodActive ? 1.2 : 0.32) - splashBoost) * 0.16
+      idleShapeKick += (0 - idleShapeKick) * 0.2
+      idleTrick = 'hover-lock'
+
+      if (floodActive) {
+        targetRadius = floodRadius
+      }
     }
 
-    x += (targetX - x) * 0.42
-    y += (targetY - y) * 0.42
-    radius += (targetRadius - radius) * 0.36
+    const chase = !isHovering && idleTrick === 'edge-dash' ? 0.64 : !isHovering && idleTrick !== 'float' ? 0.52 : 0.42
+
+    x += (targetX - x) * chase
+    y += (targetY - y) * chase
+    radius += (targetRadius - radius) * (!isHovering && idleTrick !== 'float' ? 0.5 : 0.36)
 
     const rx = rect.width > 0 ? x / rect.width - 0.5 : 0
     const ry = rect.height > 0 ? y / rect.height - 0.5 : 0
@@ -752,24 +1062,52 @@ if (card && revealLayer && blobGroup) {
     card.style.setProperty('--img-pan-y', `${panY}px`)
     card.style.setProperty('--img-zoom', `${zoom}`)
 
+    const idleClusterOffsets = idleRippleSeeds.map((seed) => {
+      const centerX = Math.cos(t * seed.spin + seed.centerAngle) * rect.width * seed.centerRadius
+      const centerY = Math.sin(t * (seed.spin * 0.93) + seed.centerAngle) * rect.height * (seed.centerRadius * 0.85)
+      const orbitX = Math.sin(t * seed.drift + seed.phaseX) * rect.width * seed.orbitX
+      const orbitY = Math.cos(t * (seed.drift * 1.12) + seed.phaseY) * rect.height * seed.orbitY
+      return { x: centerX + orbitX, y: centerY + orbitY }
+    })
+
     blobs.forEach((blob, i) => {
-      const swirlX = Math.sin(t * blob.nSpeed + blob.nSeed) * blob.nScale
-      const swirlY = Math.cos(t * (blob.nSpeed * 0.9) + blob.nSeed * 1.6) * blob.nScale
+      const swirlMultiplier = isHovering ? 0.26 : 1
+      const swirlX = Math.sin(t * blob.nSpeed + blob.nSeed) * blob.nScale * swirlMultiplier
+      const swirlY = Math.cos(t * (blob.nSpeed * 0.9) + blob.nSeed * 1.6) * blob.nScale * swirlMultiplier
+      const playfulKick = !isHovering ? splashBoost + idleShapeKick : splashBoost * 0.35
+      const shapeMode = !isHovering && idleTrick === 'squash' ? 1 : !isHovering && idleTrick === 'ziggle' ? 0.7 : !isHovering && idleTrick === 'edge-dash' ? 0.45 : 0
+      const funnyX = !isHovering ? Math.sin(t * blob.wiggleSpeed + blob.nSeed * 2) * blob.elastic * 16 * playfulKick : 0
+      const funnyY = !isHovering ? Math.cos(t * (blob.wiggleSpeed + 0.9) + blob.nSeed) * blob.elastic * 13 * playfulKick : 0
+      const squashX = Math.sin(t * 8 + i) * rect.width * 0.018 * shapeMode * (0.35 + blob.trickBias)
+      const squashY = Math.cos(t * 7 + i * 0.7) * rect.height * 0.018 * shapeMode * (1.1 - blob.trickBias)
       const splashWave = Math.sin(t * blob.pulseSpeed + blob.pulse)
-      const sprayX = splashWave * (8 + blob.splashBias * 18) * splashBoost
-      const sprayY = Math.cos(t * (blob.pulseSpeed * 0.92) + blob.pulse * 1.4) * (5 + blob.splashBias * 13) * splashBoost
-      const dragX = rx * (blob.isSatellite ? 34 : 18) * (0.5 + blob.splashBias) * splashBoost
-      const dragY = ry * (blob.isSatellite ? 26 : 12) * (0.4 + blob.splashBias) * splashBoost
-      const tx = x + blob.ox + swirlX + sprayX + dragX + Math.sin(t * blob.drift + i) * (blob.isSatellite ? 4.2 : 2.4)
-      const ty = y + blob.oy + swirlY + sprayY + dragY
+      const sprayX = isHovering ? 0 : splashWave * (8 + blob.splashBias * 18) * playfulKick
+      const sprayY = isHovering ? 0 : Math.cos(t * (blob.pulseSpeed * 0.92) + blob.pulse * 1.4) * (5 + blob.splashBias * 13) * playfulKick
+      const dragX = rx * (blob.isSatellite ? 34 : 18) * (0.5 + blob.splashBias) * playfulKick
+      const dragY = ry * (blob.isSatellite ? 26 : 12) * (0.4 + blob.splashBias) * playfulKick
+      const idleCluster = !isHovering ? idleClusterOffsets[blob.cluster] : null
+      const clusterX = idleCluster ? idleCluster.x : 0
+      const clusterY = idleCluster ? idleCluster.y : 0
+      const tx =
+        x +
+        blob.ox +
+        clusterX +
+        swirlX +
+        sprayX +
+        dragX +
+        funnyX +
+        squashX +
+        Math.sin(t * blob.drift + i) * (blob.isSatellite ? 4.2 : 2.4) * (isHovering ? 0.2 : 1)
+      const ty = y + blob.oy + clusterY + swirlY + sprayY + dragY + funnyY + squashY
 
       blob.x += (tx - blob.x) * blob.lag
       blob.y += (ty - blob.y) * blob.lag
 
       const pulse = 1 + Math.sin(t * blob.pulseSpeed + blob.pulse) * blob.pulseAmp
-      const splashStretch = 1 + splashBoost * blob.splashBias * (blob.isSatellite ? 0.7 : 0.36)
+      const prankStretch = !isHovering && idleTrick !== 'float' ? 1 + Math.sin(t * 10 + i) * 0.22 * blob.trickBias : 1
+      const splashStretch = 1 + playfulKick * blob.splashBias * (blob.isSatellite ? 0.7 : 0.36)
       const radiusNoise = 0.86 + Math.sin(t * (blob.nSpeed * 1.6) + blob.nSeed) * 0.16
-      const baseSize = radius * blob.sizeBias * pulse * splashStretch * radiusNoise
+      const baseSize = radius * blob.sizeBias * pulse * splashStretch * radiusNoise * prankStretch
       const r = Math.max(blob.isSatellite ? 2.2 : 3.2, baseSize)
       blob.circle.setAttribute('cx', `${blob.x}`)
       blob.circle.setAttribute('cy', `${blob.y}`)
@@ -811,7 +1149,7 @@ if (card && revealLayer && blobGroup) {
     splashBoost = Math.max(splashBoost, 0.35)
     setTargetFromEvent(event)
     const rect = getRect()
-    targetRadius = Math.min(108, Math.max(76, rect.width * 0.16))
+    targetRadius = getHoverBaseRadius(rect)
     if (frontImageEl) frontImageEl.style.transitionDuration = '110ms'
     if (backImageEl) backImageEl.style.transitionDuration = '110ms'
     ensureAnimation()
@@ -820,6 +1158,9 @@ if (card && revealLayer && blobGroup) {
   const endInteractive = () => {
     isHovering = false
     splashBoost = Math.max(splashBoost, 0.2)
+    clickCharge = 0
+    rapidTapCount = 0
+    floodUntil = 0
     targetRadius = 48
     if (frontImageEl) frontImageEl.style.transitionDuration = '170ms'
     if (backImageEl) backImageEl.style.transitionDuration = '170ms'
@@ -842,10 +1183,15 @@ if (card && revealLayer && blobGroup) {
 
   card.addEventListener('pointerdown', (event) => {
     startInteractive(event)
+    handleTapCharge(event)
   })
 
   card.addEventListener('pointerup', () => {
-    endInteractive()
+    if (!isHovering) {
+      endInteractive()
+      return
+    }
+    ensureAnimation()
   })
 
   card.addEventListener('pointercancel', () => {
@@ -856,6 +1202,7 @@ if (card && revealLayer && blobGroup) {
     'touchstart',
     (event) => {
       startInteractive(event)
+      handleTapCharge(event)
     },
     { passive: true },
   )
@@ -877,21 +1224,6 @@ if (card && revealLayer && blobGroup) {
     },
     { passive: true },
   )
-
-  card.addEventListener('click', () => {
-    const rect = getRect()
-    splashBoost = 1.2
-    targetRadius = Math.min(rect.width * 0.98, Math.max(targetRadius + 34, rect.width * 0.34))
-
-    if (rippleTimer) {
-      window.clearTimeout(rippleTimer)
-    }
-
-    rippleTimer = window.setTimeout(() => {
-      targetRadius = isHovering ? Math.min(108, Math.max(76, rect.width * 0.16)) : 48
-      ensureAnimation()
-    }, 220)
-  })
 
   const handleResize = () => {
     rectDirty = true
