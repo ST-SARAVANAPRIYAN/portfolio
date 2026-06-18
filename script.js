@@ -14,6 +14,11 @@ root.innerHTML = `
     <div class="secret-toast" id="secretToast" aria-live="polite"></div>
 
     <header class="topbar">
+      <div class="neo-window-dots" aria-hidden="true" style="margin-right: 0.5rem; display: flex; gap: 0.35rem;">
+        <span class="dot-red" style="width: 0.55rem; height: 0.55rem; border-radius: 50%; border: 1.5px solid var(--border-color); background: #ff5f56;"></span>
+        <span class="dot-yellow" style="width: 0.55rem; height: 0.55rem; border-radius: 50%; border: 1.5px solid var(--border-color); background: #ffbd2e;"></span>
+        <span class="dot-green" style="width: 0.55rem; height: 0.55rem; border-radius: 50%; border: 1.5px solid var(--border-color); background: #27c93f;"></span>
+      </div>
       <a href="#home" class="brand" data-close-mobile="true">
         <span class="brand-name">Saravana Priyan</span>
         <span class="brand-sub">Portfolio</span>
@@ -98,39 +103,54 @@ root.innerHTML = `
         </div>
 
         <div class="hero-card-wrap gsap-reveal">
-          <div class="hero-card-chrome" aria-hidden="true">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-          <div class="hover-reveal-card main-hero-card" id="heroRevealCard" aria-label="Profile">
-            <img src="${frontImage}" alt="Saravana Priyan" class="hrc-image hrc-front" draggable="false" />
+          <div class="neo-window" style="width: 100%; height: 100%;">
+            <div class="neo-window-header">
+              <div class="neo-window-dots" aria-hidden="true">
+                <span class="dot-red"></span>
+                <span class="dot-yellow"></span>
+                <span class="dot-green"></span>
+              </div>
+              <div class="neo-window-title">portrait.bmp</div>
+            </div>
+            <div class="neo-window-body" style="padding: 0; position: relative; height: 100%; overflow: hidden;">
+              <div class="hover-reveal-card main-hero-card" id="heroRevealCard" aria-label="Profile">
+                <img src="${frontImage}" alt="Saravana Priyan" class="hrc-image hrc-front" draggable="false" />
 
-            <svg class="hrc-svg-mask-definitions" aria-hidden="true">
-              <defs>
-                <filter id="hero-goo-filter">
-                  <feGaussianBlur in="SourceGraphic" stdDeviation="20" result="blur" />
-                  <feColorMatrix
-                    in="blur"
-                    mode="matrix"
-                    values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 12 -4"
-                    result="goo"
-                  />
-                  <feComposite in="SourceGraphic" in2="goo" operator="atop" />
-                </filter>
+                <svg class="hrc-svg-mask-definitions" aria-hidden="true">
+                  <defs>
+                    <filter id="hero-goo-filter">
+                      <feGaussianBlur in="SourceGraphic" stdDeviation="20" result="blur" />
+                      <feColorMatrix
+                        in="blur"
+                        mode="matrix"
+                        values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 12 -4"
+                        result="goo"
+                      />
+                      <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+                    </filter>
 
-                <mask id="hero-fluid-mask">
-                  <g id="heroFluidBlobGroup" filter="url(#hero-goo-filter)"></g>
-                </mask>
-              </defs>
-            </svg>
+                    <mask id="hero-fluid-mask">
+                      <g id="heroFluidBlobGroup" filter="url(#hero-goo-filter)"></g>
+                    </mask>
+                  </defs>
+                </svg>
 
-            <div class="hrc-reveal" id="heroRevealLayer" aria-hidden="true">
-              <img src="${backImage}" alt="" class="hrc-image hrc-back" draggable="false" />
+                <div class="hrc-reveal" id="heroRevealLayer" aria-hidden="true">
+                  <img src="${backImage}" alt="" class="hrc-image hrc-back" draggable="false" />
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
+
+      <!-- Neo Marquee Divider Strip -->
+      <div class="marquee-container">
+        <div class="marquee-content">
+          <span>SARAVANA PRIYAN • SOFTWARE DEVELOPER • AI & DATA SCIENCE • FRONTEND ENGINEER • OPEN SOURCE • CREATIVE CODING • </span>
+          <span>SARAVANA PRIYAN • SOFTWARE DEVELOPER • AI & DATA SCIENCE • FRONTEND ENGINEER • OPEN SOURCE • CREATIVE CODING • </span>
+        </div>
+      </div>
 
       <section id="about" class="gsap-reveal">
         <div class="section-header">
@@ -139,26 +159,46 @@ root.innerHTML = `
         </div>
 
         <div class="about-grid">
-          <article class="about-summary">
-            <p>
-              I design and build web experiences that prioritize speed, usability, and maintainable code.
-              My approach is simple: solve real user needs, keep interfaces intentional, and ship with care.
-            </p>
-            <div class="about-tags">
-              <span class="tag">Product Thinking</span>
-              <span class="tag">Performance</span>
-              <span class="tag">Clean UI</span>
-              <span class="tag">Frontend Engineering</span>
+          <article class="about-summary neo-window">
+            <div class="neo-window-header">
+              <div class="neo-window-dots" aria-hidden="true">
+                <span class="dot-red"></span>
+                <span class="dot-yellow"></span>
+                <span class="dot-green"></span>
+              </div>
+              <div class="neo-window-title">about.txt</div>
+            </div>
+            <div class="neo-window-body">
+              <p>
+                I design and build web experiences that prioritize speed, usability, and maintainable code.
+                My approach is simple: solve real user needs, keep interfaces intentional, and ship with care.
+              </p>
+              <div class="about-tags">
+                <span class="tag">Product Thinking</span>
+                <span class="tag">Performance</span>
+                <span class="tag">Clean UI</span>
+                <span class="tag">Frontend Engineering</span>
+              </div>
             </div>
           </article>
 
-          <aside class="about-info">
-            <h3>Quick Info</h3>
-            <ul class="info-list">
-              <li><span class="mini-icon" aria-hidden="true">•</span>Tamil Nadu, India</li>
-              <li><span class="mini-icon" aria-hidden="true">•</span><a href="mailto:saravanapriyanst@gmail.com">saravanapriyanst@gmail.com</a></li>
-              <li><span class="mini-icon" aria-hidden="true">•</span><a href="tel:+919994054077">+91 9994054077</a></li>
-            </ul>
+          <aside class="about-info neo-window">
+            <div class="neo-window-header">
+              <div class="neo-window-dots" aria-hidden="true">
+                <span class="dot-red"></span>
+                <span class="dot-yellow"></span>
+                <span class="dot-green"></span>
+              </div>
+              <div class="neo-window-title">info.txt</div>
+            </div>
+            <div class="neo-window-body">
+              <h3 style="margin-top: 0; text-transform: uppercase;">Quick Info</h3>
+              <ul class="info-list">
+                <li><span class="mini-icon" aria-hidden="true">•</span>Tamil Nadu, India</li>
+                <li><span class="mini-icon" aria-hidden="true">•</span><a href="mailto:saravanapriyanst@gmail.com">saravanapriyanst@gmail.com</a></li>
+                <li><span class="mini-icon" aria-hidden="true">•</span><a href="tel:+919994054077">+91 9994054077</a></li>
+              </ul>
+            </div>
           </aside>
         </div>
       </section>
@@ -172,17 +212,27 @@ root.innerHTML = `
         <div class="timeline">
           <article class="timeline-item">
             <span class="timeline-dot" aria-hidden="true"></span>
-            <div class="timeline-card">
-              <div class="timeline-head">
-                <div>
-                  <h3>B.Tech AI &amp; Data Science</h3>
-                  <p class="timeline-inst">M. Kumarasamy College of Engineering, Karur</p>
+            <div class="timeline-card neo-window">
+              <div class="neo-window-header">
+                <div class="neo-window-dots" aria-hidden="true">
+                  <span class="dot-red"></span>
+                  <span class="dot-yellow"></span>
+                  <span class="dot-green"></span>
                 </div>
-                <span class="timeline-badge">Expected: 2027</span>
+                <div class="neo-window-title">degree.exe</div>
               </div>
-              <p class="timeline-detail">
-                Current CGPA: <strong>8.24</strong>
-              </p>
+              <div class="neo-window-body">
+                <div class="timeline-head">
+                  <div>
+                    <h3>B.Tech AI &amp; Data Science</h3>
+                    <p class="timeline-inst">M. Kumarasamy College of Engineering, Karur</p>
+                  </div>
+                  <span class="timeline-badge">Expected: 2027</span>
+                </div>
+                <p class="timeline-detail">
+                  Current CGPA: <strong>8.24</strong>
+                </p>
+              </div>
             </div>
           </article>
         </div>
@@ -195,56 +245,96 @@ root.innerHTML = `
         </div>
 
         <div class="skills-bento">
-          <article class="skill-card">
-            <div class="skill-card-header">
-              <span class="skill-icon">L</span>
-              <h3>Languages</h3>
+          <article class="skill-card neo-window">
+            <div class="neo-window-header">
+              <div class="neo-window-dots" aria-hidden="true">
+                <span class="dot-red"></span>
+                <span class="dot-yellow"></span>
+                <span class="dot-green"></span>
+              </div>
+              <div class="neo-window-title">languages.bat</div>
             </div>
-            <div class="skill-pills">
-              <span class="skill-pill">Python</span>
-              <span class="skill-pill">Java</span>
-              <span class="skill-pill">C</span>
-              <span class="skill-pill">SQL</span>
-            </div>
-          </article>
-
-          <article class="skill-card">
-            <div class="skill-card-header">
-              <span class="skill-icon">W</span>
-              <h3>Web Tech</h3>
-            </div>
-            <div class="skill-pills">
-              <span class="skill-pill">HTML</span>
-              <span class="skill-pill">CSS</span>
-              <span class="skill-pill">JavaScript</span>
-              <span class="skill-pill">Flask</span>
+            <div class="neo-window-body">
+              <div class="skill-card-header">
+                <span class="skill-icon">L</span>
+                <h3 style="text-transform: uppercase;">Languages</h3>
+              </div>
+              <div class="skill-pills">
+                <span class="skill-pill">Python</span>
+                <span class="skill-pill">Java</span>
+                <span class="skill-pill">C</span>
+                <span class="skill-pill">SQL</span>
+              </div>
             </div>
           </article>
 
-          <article class="skill-card">
-            <div class="skill-card-header">
-              <span class="skill-icon">T</span>
-              <h3>Tools</h3>
+          <article class="skill-card neo-window">
+            <div class="neo-window-header">
+              <div class="neo-window-dots" aria-hidden="true">
+                <span class="dot-red"></span>
+                <span class="dot-yellow"></span>
+                <span class="dot-green"></span>
+              </div>
+              <div class="neo-window-title">web.config</div>
             </div>
-            <div class="skill-pills">
-              <span class="skill-pill">Git</span>
-              <span class="skill-pill">MongoDB Atlas</span>
-              <span class="skill-pill">IBM SPSS</span>
-              <span class="skill-pill">Watson Studio</span>
-              <span class="skill-pill">Pandas</span>
+            <div class="neo-window-body">
+              <div class="skill-card-header">
+                <span class="skill-icon">W</span>
+                <h3 style="text-transform: uppercase;">Web Tech</h3>
+              </div>
+              <div class="skill-pills">
+                <span class="skill-pill">HTML</span>
+                <span class="skill-pill">CSS</span>
+                <span class="skill-pill">JavaScript</span>
+                <span class="skill-pill">Flask</span>
+              </div>
             </div>
           </article>
 
-          <article class="skill-card">
-            <div class="skill-card-header">
-              <span class="skill-icon">S</span>
-              <h3>Soft Skills</h3>
+          <article class="skill-card neo-window">
+            <div class="neo-window-header">
+              <div class="neo-window-dots" aria-hidden="true">
+                <span class="dot-red"></span>
+                <span class="dot-yellow"></span>
+                <span class="dot-green"></span>
+              </div>
+              <div class="neo-window-title">tools.bin</div>
             </div>
-            <div class="skill-pills">
-              <span class="skill-pill">Team Collaboration</span>
-              <span class="skill-pill">Problem-solving</span>
-              <span class="skill-pill">Adaptability</span>
-              <span class="skill-pill">Analytical Thinking</span>
+            <div class="neo-window-body">
+              <div class="skill-card-header">
+                <span class="skill-icon">T</span>
+                <h3 style="text-transform: uppercase;">Tools</h3>
+              </div>
+              <div class="skill-pills">
+                <span class="skill-pill">Git</span>
+                <span class="skill-pill">MongoDB Atlas</span>
+                <span class="skill-pill">IBM SPSS</span>
+                <span class="skill-pill">Watson Studio</span>
+                <span class="skill-pill">Pandas</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="skill-card neo-window">
+            <div class="neo-window-header">
+              <div class="neo-window-dots" aria-hidden="true">
+                <span class="dot-red"></span>
+                <span class="dot-yellow"></span>
+                <span class="dot-green"></span>
+              </div>
+              <div class="neo-window-title">soft.txt</div>
+            </div>
+            <div class="neo-window-body">
+              <div class="skill-card-header">
+                <span class="skill-icon">S</span>
+                <h3 style="text-transform: uppercase;">Soft Skills</h3>
+              </div>
+              <div class="skill-pills">
+                <span class="skill-pill">Team Collaboration</span>
+                <span class="skill-pill">Problem-solving</span>
+                <span class="skill-pill">Adaptability</span>
+                <span class="skill-pill">Analytical Thinking</span>
+              </div>
             </div>
           </article>
         </div>
@@ -257,61 +347,91 @@ root.innerHTML = `
         </div>
 
         <div class="project-list">
-          <article class="project-card">
-            <span class="project-num">01</span>
-            <div>
-              <div class="project-head">
-                <h3>College Event Management System</h3>
-                <div class="project-stack">
-                  <span class="stack-badge">Python</span>
-                  <span class="stack-badge">Flask</span>
-                  <span class="stack-badge">MySQL</span>
-                  <span class="stack-badge">Razorpay</span>
-                </div>
+          <article class="project-card neo-window">
+            <div class="neo-window-header">
+              <div class="neo-window-dots" aria-hidden="true">
+                <span class="dot-red"></span>
+                <span class="dot-yellow"></span>
+                <span class="dot-green"></span>
               </div>
-              <ul class="project-bullets">
-                <li>Built end-to-end event workflow platform for students and organizers.</li>
-                <li>Integrated Razorpay payment, dynamic event pages, notifications and analytics.</li>
-                <li>Reduced manual coordination overhead significantly across departments.</li>
-              </ul>
+              <div class="neo-window-title">project_1.bin</div>
+            </div>
+            <div class="neo-window-body project-card-body" style="display: grid; grid-template-columns: 4rem 1fr; gap: 1.5rem;">
+              <span class="project-num">01</span>
+              <div>
+                <div class="project-head">
+                  <h3 style="text-transform: uppercase;">College Event Management System</h3>
+                  <div class="project-stack">
+                    <span class="stack-badge">Python</span>
+                    <span class="stack-badge">Flask</span>
+                    <span class="stack-badge">MySQL</span>
+                    <span class="stack-badge">Razorpay</span>
+                  </div>
+                </div>
+                <ul class="project-bullets">
+                  <li>Built end-to-end event workflow platform for students and organizers.</li>
+                  <li>Integrated Razorpay payment, dynamic event pages, notifications and analytics.</li>
+                  <li>Reduced manual coordination overhead significantly across departments.</li>
+                </ul>
+              </div>
             </div>
           </article>
 
-          <article class="project-card">
-            <span class="project-num">02</span>
-            <div>
-              <div class="project-head">
-                <h3>Smart Home Insights</h3>
-                <div class="project-stack">
-                  <span class="stack-badge">Python</span>
-                  <span class="stack-badge">Pandas</span>
-                  <span class="stack-badge">Matplotlib</span>
-                </div>
+          <article class="project-card neo-window">
+            <div class="neo-window-header">
+              <div class="neo-window-dots" aria-hidden="true">
+                <span class="dot-red"></span>
+                <span class="dot-yellow"></span>
+                <span class="dot-green"></span>
               </div>
-              <ul class="project-bullets">
-                <li>Engineered an analytical engine to monitor and visualize energy-usage trends.</li>
-                <li>Created data-driven alerts to optimize electricity consumption and cost.</li>
-                <li>Delivered clear, actionable visual insights for daily decision-making.</li>
-              </ul>
+              <div class="neo-window-title">project_2.bin</div>
+            </div>
+            <div class="neo-window-body project-card-body" style="display: grid; grid-template-columns: 4rem 1fr; gap: 1.5rem;">
+              <span class="project-num">02</span>
+              <div>
+                <div class="project-head">
+                  <h3 style="text-transform: uppercase;">Smart Home Insights</h3>
+                  <div class="project-stack">
+                    <span class="stack-badge">Python</span>
+                    <span class="stack-badge">Pandas</span>
+                    <span class="stack-badge">Matplotlib</span>
+                  </div>
+                </div>
+                <ul class="project-bullets">
+                  <li>Engineered an analytical engine to monitor and visualize energy-usage trends.</li>
+                  <li>Created data-driven alerts to optimize electricity consumption and cost.</li>
+                  <li>Delivered clear, actionable visual insights for daily decision-making.</li>
+                </ul>
+              </div>
             </div>
           </article>
 
-          <article class="project-card">
-            <span class="project-num">03</span>
-            <div>
-              <div class="project-head">
-                <h3>LearnAID - Intelligent Learning Support</h3>
-                <div class="project-stack">
-                  <span class="stack-badge">Cognitive Computing</span>
-                  <span class="stack-badge">Personalization</span>
-                  <span class="stack-badge">Cloud Design</span>
-                </div>
+          <article class="project-card neo-window">
+            <div class="neo-window-header">
+              <div class="neo-window-dots" aria-hidden="true">
+                <span class="dot-red"></span>
+                <span class="dot-yellow"></span>
+                <span class="dot-green"></span>
               </div>
-              <ul class="project-bullets">
-                <li>Designed recommendation-driven cognitive learning support architecture.</li>
-                <li>Integrated gamification and cloud-first scalability for high engagement.</li>
-                <li>Focused on measurable improvements in participation and learning outcomes.</li>
-              </ul>
+              <div class="neo-window-title">project_3.bin</div>
+            </div>
+            <div class="neo-window-body project-card-body" style="display: grid; grid-template-columns: 4rem 1fr; gap: 1.5rem;">
+              <span class="project-num">03</span>
+              <div>
+                <div class="project-head">
+                  <h3 style="text-transform: uppercase;">LearnAID - Intelligent Learning Support</h3>
+                  <div class="project-stack">
+                    <span class="stack-badge">Cognitive Computing</span>
+                    <span class="stack-badge">Personalization</span>
+                    <span class="stack-badge">Cloud Design</span>
+                  </div>
+                </div>
+                <ul class="project-bullets">
+                  <li>Designed recommendation-driven cognitive learning support architecture.</li>
+                  <li>Integrated gamification and cloud-first scalability for high engagement.</li>
+                  <li>Focused on measurable improvements in participation and learning outcomes.</li>
+                </ul>
+              </div>
             </div>
           </article>
         </div>
@@ -324,17 +444,27 @@ root.innerHTML = `
         </div>
 
         <div class="opensource-list">
-          <article class="opensource-card">
-            <div class="opensource-header">
-              <h3>iNiR</h3>
-              <a href="https://github.com/snowarch/iNiR" class="inline-link" target="_blank" rel="noreferrer">View Repo →</a>
+          <article class="opensource-card neo-window">
+            <div class="neo-window-header">
+              <div class="neo-window-dots" aria-hidden="true">
+                <span class="dot-red"></span>
+                <span class="dot-yellow"></span>
+                <span class="dot-green"></span>
+              </div>
+              <div class="neo-window-title">contrib.sh</div>
             </div>
-            <p class="opensource-desc">
-              Active contributor to the iNiR project, collaborating on features, bug fixes, and code reviews.
-            </p>
-            <div class="opensource-meta">
-              <span class="stack-badge">Contributor</span>
-              <span class="stack-badge">snowarch/iNiR</span>
+            <div class="neo-window-body">
+              <div class="opensource-header">
+                <h3 style="text-transform: uppercase;">iNiR</h3>
+                <a href="https://github.com/snowarch/iNiR" class="inline-link" target="_blank" rel="noreferrer">View Repo →</a>
+              </div>
+              <p class="opensource-desc" style="margin-top: 1rem;">
+                Active contributor to the iNiR project, collaborating on features, bug fixes, and code reviews.
+              </p>
+              <div class="opensource-meta">
+                <span class="stack-badge">Contributor</span>
+                <span class="stack-badge">snowarch/iNiR</span>
+              </div>
             </div>
           </article>
         </div>
@@ -347,42 +477,62 @@ root.innerHTML = `
         </div>
 
         <div class="certs-grid">
-          <article class="pub-card">
-            <span class="pub-tag">Focus Area</span>
-            <h3>Data & Web Engineering</h3>
-            <p>
-              I focus on practical software work: building dependable interfaces, using data responsibly,
-              and improving real workflows.
-            </p>
+          <article class="pub-card neo-window">
+            <div class="neo-window-header">
+              <div class="neo-window-dots" aria-hidden="true">
+                <span class="dot-red"></span>
+                <span class="dot-yellow"></span>
+                <span class="dot-green"></span>
+              </div>
+              <div class="neo-window-title">focus.txt</div>
+            </div>
+            <div class="neo-window-body">
+              <span class="pub-tag">Focus Area</span>
+              <h3 style="text-transform: uppercase;">Data & Web Engineering</h3>
+              <p style="margin-top: 1rem; line-height: 1.7;">
+                I focus on practical software work: building dependable interfaces, using data responsibly,
+                and improving real workflows.
+              </p>
+            </div>
           </article>
 
-          <div class="cert-list">
-            <article class="cert-item">
-              <span class="cert-icon">•</span>
-              <span>JLPT N4 - Japanese Language Proficiency Test (Completed)</span>
-            </article>
-            <article class="cert-item">
-              <span class="cert-icon">•</span>
-              <span>Internship Certificate</span>
-            </article>
-            <article class="cert-item">
-              <span class="cert-icon">•</span>
-              <span>Predictive Modeling with IBM SPSS Modeler</span>
-            </article>
-            <article class="cert-item">
-              <span class="cert-icon">•</span>
-              <span>Big Data Technologies - Spark Fundamentals</span>
-            </article>
-            <article class="cert-item">
-              <span class="cert-icon">•</span>
-              <span>Data Visualization with Python - IBM Cognitive Class</span>
-            </article>
+          <div class="cert-list neo-window">
+            <div class="neo-window-header">
+              <div class="neo-window-dots" aria-hidden="true">
+                <span class="dot-red"></span>
+                <span class="dot-yellow"></span>
+                <span class="dot-green"></span>
+              </div>
+              <div class="neo-window-title">certs.list</div>
+            </div>
+            <div class="neo-window-body" style="padding: 1.2rem;">
+              <article class="cert-item">
+                <span class="cert-icon">01</span>
+                <span>JLPT N4 - Japanese Language Proficiency Test (Completed)</span>
+              </article>
+              <article class="cert-item">
+                <span class="cert-icon">02</span>
+                <span>Internship Certificate</span>
+              </article>
+              <article class="cert-item">
+                <span class="cert-icon">03</span>
+                <span>Predictive Modeling with IBM SPSS Modeler</span>
+              </article>
+              <article class="cert-item">
+                <span class="cert-icon">04</span>
+                <span>Big Data Technologies - Spark Fundamentals</span>
+              </article>
+              <article class="cert-item">
+                <span class="cert-icon">05</span>
+                <span>Data Visualization with Python - IBM Cognitive Class</span>
+              </article>
+            </div>
           </div>
         </div>
 
         <div class="cert-showcase gsap-reveal">
           <p class="cert-showcase-label">
-            <span class="mini-icon" aria-hidden="true">•</span> Featured Credential
+            <span class="mini-icon" aria-hidden="true">•</span> Featured Credentials
           </p>
           <div class="cert-cards">
             <figure class="cert-doc-card cert-animated-card">
@@ -420,28 +570,38 @@ root.innerHTML = `
     </main>
 
     <section id="contact" class="contact gsap-reveal">
-      <div class="contact-inner">
-        <div class="contact-text">
-          <p class="section-label"><span class="mini-icon" aria-hidden="true">•</span> Contact</p>
-          <h2>Open to internships and project collaborations</h2>
-          <p>
-            If you are building something useful and need a dependable developer, I would love to connect.
-          </p>
+      <div class="contact-inner neo-window">
+        <div class="neo-window-header">
+          <div class="neo-window-dots" aria-hidden="true">
+            <span class="dot-red"></span>
+            <span class="dot-yellow"></span>
+            <span class="dot-green"></span>
+          </div>
+          <div class="neo-window-title">connect.exe</div>
         </div>
+        <div class="neo-window-body" style="padding: 2rem;">
+          <div class="contact-text">
+            <p class="section-label"><span class="mini-icon" aria-hidden="true">•</span> Contact</p>
+            <h2 style="text-transform: uppercase;">Open to internships and collaborations</h2>
+            <p style="margin-top: 1rem;">
+              If you are building something useful and need a dependable developer, I would love to connect.
+            </p>
+          </div>
 
-        <div class="contact-links">
-          <a href="mailto:saravanapriyanst@gmail.com" class="contact-btn primary">
-            <span class="mini-icon" aria-hidden="true">•</span> Email Me
-          </a>
-          <a href="tel:+919994054077" class="contact-btn">
-            <span class="mini-icon" aria-hidden="true">•</span> Call
-          </a>
-          <a href="https://github.com/ST-SARAVANAPRIYAN" class="contact-btn" target="_blank" rel="noreferrer">
-            <span class="mini-icon" aria-hidden="true">•</span> GitHub
-          </a>
-          <a href="https://www.linkedin.com/in/saravana-priyan-s-t" class="contact-btn" target="_blank" rel="noreferrer">
-            <span class="mini-icon" aria-hidden="true">•</span> LinkedIn
-          </a>
+          <div class="contact-links" style="margin-top: 2rem;">
+            <a href="mailto:saravanapriyanst@gmail.com" class="contact-btn primary">
+              <span class="mini-icon" aria-hidden="true">•</span> Email Me
+            </a>
+            <a href="tel:+919994054077" class="contact-btn">
+              <span class="mini-icon" aria-hidden="true">•</span> Call
+            </a>
+            <a href="https://github.com/ST-SARAVANAPRIYAN" class="contact-btn" target="_blank" rel="noreferrer">
+              <span class="mini-icon" aria-hidden="true">•</span> GitHub
+            </a>
+            <a href="https://www.linkedin.com/in/saravana-priyan-s-t" class="contact-btn" target="_blank" rel="noreferrer">
+              <span class="mini-icon" aria-hidden="true">•</span> LinkedIn
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -529,7 +689,42 @@ const setTheme = (theme, point = null, { immediate = false } = {}) => {
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-  if (immediate || !themeRipple || prefersReduced) {
+  if (immediate || prefersReduced) {
+    applyTheme(theme)
+    return
+  }
+
+  // Modern View Transitions API (reveals the live target theme dynamically as the circle grows)
+  if (document.startViewTransition) {
+    const transition = document.startViewTransition(() => {
+      applyTheme(theme)
+    })
+
+    transition.ready.then(() => {
+      const limit = Math.hypot(
+        Math.max(x, window.innerWidth - x),
+        Math.max(y, window.innerHeight - y)
+      )
+
+      document.documentElement.animate(
+        {
+          clipPath: [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${limit}px at ${x}px ${y}px)`
+          ]
+        },
+        {
+          duration: 650,
+          easing: 'cubic-bezier(0.1, 0.9, 0.2, 1)',
+          pseudoElement: '::view-transition-new(root)'
+        }
+      )
+    })
+    return
+  }
+
+  // Legacy fallback if View Transitions API is not supported
+  if (!themeRipple) {
     applyTheme(theme)
     return
   }
@@ -679,7 +874,7 @@ if (footerCopy) {
   })
 }
 
-// Protect certificate and marksheet images
+// Protect certificate images
 const protectedImages = document.querySelectorAll('img[data-protected="true"]')
 protectedImages.forEach((img) => {
   // Prevent right-click context menu
